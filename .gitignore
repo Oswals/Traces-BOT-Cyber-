@@ -1,0 +1,20 @@
+# --- Secrets : ne JAMAIS commiter ---
+.env
+
+# --- Environnement virtuel Python ---
+.venv/
+
+# --- Fichiers générés automatiquement par Python ---
+__pycache__/
+*.pyc
+
+# --- Données produites par le bot (se recréent à chaque lancement) ---
+data/
+sortie/
+deja_vus.json
+*.log
+
+# --- Éditeur et système ---
+.vscode/
+Thumbs.db
+desktop.ini
