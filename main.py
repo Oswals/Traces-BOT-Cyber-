@@ -1,8 +1,8 @@
 """
 TRACES : lance le pipeline complet.
 
-Étape 2 : collecte les articles de toutes les sources et affiche un résumé.
-Les étapes suivantes (enrichissement, sélection, mise en page...) s'ajouteront ici.
+Étape 3 : collecte les articles, les regroupe par CVE, les enrichit (NVD, KEV)
+et affiche un résumé. Les étapes suivantes (sélection, mise en page...) s'ajouteront ici.
 
 Utilisation :
     python main.py           -> résumé de la collecte
@@ -15,8 +15,10 @@ from collections import defaultdict
 
 import config
 from collecteurs import collecter_tout
+from enrichissement import enrichir
 
 EXEMPLES_PAR_SOURCE = 3  # nombre de titres affichés par source
+FAILLES_AFFICHEES = 10   # nombre de failles affichées dans le résumé
 
 
 def preparer_dossiers() -> None:
@@ -44,6 +46,29 @@ def afficher_resume(articles: list) -> None:
     print(f"\nTotal : {len(articles)} articles de {len(par_source)} sources.")
 
 
+def afficher_failles(failles: list) -> None:
+    exploitees = sum(f.exploitee for f in failles)
+    critiques = sum((f.score or 0) >= 9 for f in failles)
+    croisees = sum(len(f.sources) >= 2 for f in failles)
+    print(f"\n=== Failles : {len(failles)} CVE, {exploitees} exploitées, "
+          f"{critiques} critiques, {croisees} citées par plusieurs sources ===")
+
+    for faille in failles[:FAILLES_AFFICHEES]:
+        if faille.nvd and faille.score is not None:
+            gravite = f"{faille.score:>4} {faille.nvd.gravite:<8}"
+        else:
+            gravite = "   ? non évaluée"
+        exploitee = "EXPLOITÉE" if faille.exploitee else "         "
+        print(f"  [{gravite}] {exploitee} {faille.cve}")
+        if faille.nvd:
+            produits = ", ".join(faille.nvd.produits[:3]) or "produit non précisé"
+            if len(faille.nvd.produits) > 3:
+                produits += f" et {len(faille.nvd.produits) - 3} autres"
+            cwes = ", ".join(faille.nvd.cwes) or "CWE non précisée"
+            print(f"      {produits} | {cwes} | CVSS {faille.nvd.version_cvss}")
+        print(f"      Sources : {', '.join(faille.sources)}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="TRACES, magazine de veille cyber")
     parser.add_argument("--debug", action="store_true", help="logs détaillés")
@@ -55,6 +80,8 @@ def main() -> None:
     preparer_dossiers()
     articles = collecter_tout()
     afficher_resume(articles)
+    failles = enrichir(articles)
+    afficher_failles(failles)
 
 
 if __name__ == "__main__":

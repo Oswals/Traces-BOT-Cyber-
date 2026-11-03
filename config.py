@@ -43,6 +43,15 @@ CYBERMALVEILLANCE_FLUX = "https://www.cybermalveillance.gouv.fr/feed/atom-flux-a
 
 CISA_KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 
+# --- NVD (dictionnaire des CVE, jamais une source d'articles) --------------------
+
+NVD_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0?cveId="
+# Limites officielles : 5 requêtes / 30 s sans clé, 50 / 30 s avec clé (+ marge)
+NVD_DELAI_SANS_CLE = 6.5
+NVD_DELAI_AVEC_CLE = 0.7
+FICHIER_CACHE_NVD = DOSSIER_DATA / "cache_nvd.json"
+NVD_CACHE_JOURS = 7     # au-delà, on redemande la CVE (son score a pu changer)
+
 PRESSE = [
     {"nom": "BleepingComputer", "langue": "en", "url": "https://www.bleepingcomputer.com/feed/"},
     {"nom": "The Hacker News",  "langue": "en", "url": "https://feeds.feedburner.com/TheHackersNews"},
