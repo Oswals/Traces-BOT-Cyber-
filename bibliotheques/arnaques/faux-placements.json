@@ -1,0 +1,45 @@
+{
+  "id": "faux-placements",
+  "nom": "Les faux placements et investissements",
+  "verifie": false,
+  "resume": "Une publicité ou un « conseiller » rencontré en ligne promet des rendements élevés et sans risque (crypto-monnaies, or, livrets…). Les premiers gains affichés sont fictifs : quand la victime veut récupérer son argent, de nouveaux frais sont exigés, puis le contact disparaît.",
+  "signes": [
+    "Un rendement garanti et très supérieur à celui des placements classiques.",
+    "Une pression pour investir vite, puis pour réinvestir davantage.",
+    "Des frais à payer pour débloquer ses gains, ou une plateforme absente des listes officielles."
+  ],
+  "reflexe": "Vérifier que l'intermédiaire est autorisé et ne figure pas sur les listes noires de l'Autorité des marchés financiers (AMF) avant tout versement.",
+  "si_victime": [
+    "Ne plus rien verser, même pour « récupérer » son argent : les offres de récupération sont souvent une seconde arnaque.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "AMF",
+      "detail": "Consulter les listes noires et signaler une offre suspecte.",
+      "lien": "https://www.amf-france.org/"
+    },
+    {
+      "nom": "Info Escroqueries",
+      "detail": "0 805 805 817 (appel gratuit) : conseils et orientation en cas d'escroquerie.",
+      "lien": ""
+    }
+  ],
+  "mots_cles": [
+    "placement",
+    "investissement",
+    "crypto",
+    "bitcoin",
+    "trading",
+    "rendement",
+    "faux placement",
+    "pig butchering"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

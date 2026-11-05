@@ -39,7 +39,12 @@ CERTFR_FLUX = {
     "cti":       "https://cert.cyber.gouv.fr/cti/feed/",        # rapports de menace
 }
 
-CYBERMALVEILLANCE_FLUX = "https://www.cybermalveillance.gouv.fr/feed/atom-flux-actualites"
+# Cybermalveillance.gouv.fr n'est PLUS interrogé : son anti-robot (Imperva) bloque les accès
+# automatiques. La rubrique Arnaques a sa propre logique, voir plus bas.
+
+# Bulletin complet de chaque alerte / avis : adresse du bulletin + "json/" (export officiel)
+FICHIER_CACHE_CERTFR = DOSSIER_DATA / "cache_certfr.json"
+CERTFR_CACHE_JOURS = 2  # un bulletin peut être mis à jour (nouvelles CVE) : on le relit après 2 jours
 
 CISA_KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 
@@ -68,5 +73,19 @@ PRESSE = [
 
 FENETRE_UNE_JOURS = 3       # la une et les failles exploitées sont choisies parmi les infos de moins de 3 jours
 NB_FAILLES_EXPLOITEES = 3   # fiches de la page « Failles exploitées »
-NB_BREVES = 3               # brèves par colonne (Monde, France)
+NB_BREVES = 4               # brèves par colonne (Monde, France)
 FICHIER_NUMERO = DOSSIER_DATA / "numero.json"  # dernier numéro publié (pour numéroter le suivant)
+
+# --- Rubrique « Arnaques » ---------------------------------------------------------
+# Ordre de priorité : 1. alerte saisie à la main  2. article de presse  3. fiche en rotation
+
+FICHIER_ARNAQUE_MANUELLE = DOSSIER_DATA / "arnaque_manuelle.json"  # modèle : arnaque_manuelle.exemple.json
+ARNAQUE_MANUELLE_JOURS = 7   # au-delà, l'alerte saisie à la main est considérée comme périmée
+ARNAQUE_PRESSE_JOURS = 7     # on cherche un article de presse sur une arnaque de moins de 7 jours
+DOSSIER_ARNAQUES = DOSSIER_BIBLIOTHEQUES / "arnaques"
+LIEN_CYBERMALVEILLANCE = "https://www.cybermalveillance.gouv.fr/"
+
+# Mots-clés cherchés dans le TITRE des articles de presse (début de mot, sans accent obligatoire)
+MOTS_CLES_ARNAQUE = ["arnaque", "escroc", "escroquerie", "hameçonnage", "hameconnage", "phishing",
+                     "smishing", "vishing", "faux conseiller", "fausse conseillère", "faux support",
+                     "faux site", "faux SMS", "sextorsion", "fraude au président", "usurpation", "scam"]

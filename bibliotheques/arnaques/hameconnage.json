@@ -1,0 +1,51 @@
+{
+  "id": "hameconnage",
+  "nom": "L'hameçonnage (phishing)",
+  "verifie": false,
+  "resume": "Un faux message (courriel, SMS, réseau social) imite une banque, un service public ou une marque connue. Il pousse à cliquer sur un lien vers un faux site qui récupère identifiants, mots de passe ou numéro de carte.",
+  "signes": [
+    "Un ton urgent ou menaçant : compte bloqué, remboursement à réclamer, dernière relance.",
+    "Une adresse d'expéditeur ou un lien qui ne correspond pas exactement au site officiel.",
+    "Une demande d'identifiants, de code reçu par SMS ou de numéro de carte."
+  ],
+  "reflexe": "Ne pas cliquer : aller sur le site officiel en tapant soi-même son adresse, ou appeler l'organisme au numéro habituel.",
+  "si_victime": [
+    "Changer immédiatement le mot de passe du compte concerné, et partout où il était réutilisé.",
+    "Si des coordonnées bancaires ont été saisies : faire opposition sans attendre.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "Signal Spam",
+      "detail": "Signaler un courriel frauduleux.",
+      "lien": "https://www.signal-spam.fr/"
+    },
+    {
+      "nom": "33700",
+      "detail": "Transférer gratuitement le SMS frauduleux au 33700 (ou signaler le numéro d'appel).",
+      "lien": "https://www.33700.fr/"
+    },
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    }
+  ],
+  "mots_cles": [
+    "hameçonnage",
+    "hameconnage",
+    "phishing",
+    "smishing",
+    "faux site",
+    "faux mail",
+    "courriel frauduleux",
+    "identifiants"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

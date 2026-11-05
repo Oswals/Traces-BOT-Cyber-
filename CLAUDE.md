@@ -16,8 +16,8 @@ Chaque matin, produire un numéro du magazine **TRACES** : une veille cyber péd
 
 | Source | Rôle dans le magazine |
 |---|---|
-| CERT-FR (ANSSI) | Alertes, bulletins d'actualité, rapports CTI. Les « avis » sont trop nombreux : on ne les garde pas pour la une. |
-| Cybermalveillance.gouv.fr | Rubrique « L'arnaque du moment » |
+| CERT-FR (ANSSI) | Alertes, bulletins d'actualité, rapports CTI. Les « avis » sont trop nombreux : on ne les garde pas pour la une. Le texte complet de chaque alerte et avis (systèmes affectés, risques, solution, CVE) vient de son export JSON officiel (adresse du bulletin + `json/`). |
+| Cybermalveillance.gouv.fr | **N'est plus interrogé** : son anti-robot bloque les accès automatiques. Sert seulement de lien de référence et de source pour l'alerte saisie à la main (voir rubrique Arnaques). |
 | CISA KEV | Failles activement exploitées (fichier JSON officiel) |
 | NVD (NIST) | **Dictionnaire uniquement** : score CVSS et type de faille (CWE) des CVE citées ailleurs. Jamais une source d'articles. |
 | BleepingComputer, The Hacker News | Presse internationale |
@@ -32,10 +32,12 @@ traces/
 ├── main.py                  # lance tout le pipeline
 ├── config.py                # réglages (sources, nombre d'articles…)
 ├── .env.example             # modèle des clés (le vrai .env n'est jamais commité)
+├── arnaque_manuelle.exemple.json  # modèle de l'alerte Arnaques saisie à la main
 ├── requirements.txt
 ├── collecteurs/             # 1 fichier par source, tous renvoient des Article
-├── enrichissement/          # dédoublonnage par CVE, NVD, KEV
+├── enrichissement/          # bulletins CERT-FR (JSON), dédoublonnage par CVE, NVD, KEV
 ├── selection/               # choix de la une, des 3 failles, des brèves…
+│   └── arnaque.py           # choix de la rubrique Arnaques (3 niveaux, voir plus bas)
 ├── redaction/               # rédacteurs interchangeables
 │   ├── base.py              # interface commune
 │   ├── sans_ia.py           # rédacteur PAR DÉFAUT : sources officielles + calculs + bibliothèques
@@ -50,7 +52,10 @@ traces/
 ├── mise_en_page/
 │   ├── templates/           # gabarits Jinja2 des pages TRACES
 │   └── static/              # CSS, polices
-├── data/deja_vus.json       # mémoire des articles déjà traités
+├── data/                    # créé au lancement, jamais commité
+│   ├── deja_vus.json        # mémoire des articles déjà traités
+│   ├── arnaque_manuelle.json  # alerte Arnaques saisie à la main (facultatif)
+│   └── cache_*.json, numero.json
 ├── sortie/                  # numéros générés (HTML + PDF)
 └── tests/
 ```
@@ -85,7 +90,11 @@ Autres contenus sans IA :
 - **Titre de la une** construit à partir des données (ex. « [Produit] : une faille critique déjà exploitée ») ; le titre officiel passe en sous-titre.
 - **« Le numéro en bref »** remplace l'édito : nombre de failles suivies, critiques, exploitées, sources consultées.
 - **Brèves presse** : titre et résumé du flux RSS, dans leur langue d'origine (étiquette EN / FR), avec le lien.
-- **Arnaque du moment** : l'alerte Cybermalveillance est associée par mots-clés à une fiche de la bibliothèque Arnaques.
+- **Arnaques** (page à part entière, jamais masquée). Ordre de priorité :
+  1. `data/arnaque_manuelle.json` s'il existe et date de moins de 7 jours (alerte recopiée à la main, par exemple depuis Cybermalveillance) ;
+  2. sinon, l'article de presse le plus récent (moins de 7 jours) dont le titre contient un mot-clé d'arnaque (arnaque, hameçonnage, phishing, escroquerie, faux conseiller…), associé par mots-clés à la fiche de la bibliothèque la plus proche, étiquette SOURCE ;
+  3. sinon, « La fiche du numéro » : une fiche de la bibliothèque en rotation (numéro du jour modulo nombre de fiches), étiquette BIBLIOTHÈQUE, avec un lien vers cybermalveillance.gouv.fr.
+  Si la bibliothèque est illisible, une fiche de secours écrite dans le code prend le relais.
 - **Lexique** : seuls les termes de `lexique.json` présents dans le numéro sont affichés.
 
 Ce que l'IA locale ajoutera plus tard : un récit pour « Ce qui s'est passé », la traduction et le résumé de la presse anglophone, un édito rédigé, une comparaison de la vie courante dans « C'est quoi ? ».
@@ -99,7 +108,7 @@ Concept : le dossier d'enquête. Tons de rapport de renseignement et de revue sc
 - **Couleurs** : Encre `#111418` · Papier `#F6F6F3` · Signal `#2E47E6` (identité) · Brume `#E8ECFD` (encadrés « Comprendre ») · Alerte `#E8590C` (danger uniquement) · Graphite `#4B5058` · Filet `#CFD2D6`
 - **Niveau de menace (CVSS)** : Faible `#D9DCE1` (0,1–3,9) · Moyenne `#F6B98A` (4–6,9) · Haute `#E8590C` (7–8,9) · Critique `#111418` (9–10)
 - **Polices** (Google Fonts) : Archivo Condensed (titres, chiffres ; Expanded pour le titre TRACES) · Source Serif 4 (texte) · IBM Plex Mono (codes, CVE, dates, sources)
-- **Éléments récurrents** : filet signal de 10 px en tête de page, en-tête « TRACES · N°xx · date » et rubrique, codes [01] Une / [02] Failles / [03] Radar / [04] Histoire, encadré COMPRENDRE, notes LEXIQUE, marques de provenance, folio en pied de page
+- **Éléments récurrents** : filet signal de 10 px en tête de page, en-tête « TRACES · N°xx · date » et rubrique, codes [01] Une / [02] Failles / [03] Radar / [04] Arnaques / [05] Histoire, encadré COMPRENDRE, notes LEXIQUE, marques de provenance, folio en pied de page
 - **Marques de provenance** : SOURCE (filet encre) · CALCULÉ (filet et texte signal) · BIBLIOTHÈQUE (fond encre, texte papier) · IA LOCALE (filet signal en pointillés)
 - **Règles** : A4 794×1123 px, marges 64 px, grille de 6 colonnes, gouttière 24 px, aucun texte sous 12 px, aucune illustration décorative
 
@@ -109,8 +118,9 @@ Concept : le dossier d'enquête. Tons de rapport de renseignement et de revue sc
 2. **Sommaire** : « Le numéro en bref » (chiffres calculés) et mode d'emploi du magazine
 3. **À la une** : titre construit et titre officiel, résumé officiel, fiche d'identité de la faille, **profil de la faille** (8 cases traduites du vecteur CVSS : accès, difficulté, compte nécessaire, action de la victime, portée, confidentialité, intégrité, disponibilité, colorées selon la gravité), COMPRENDRE en 5 points avec leur provenance, lexique
 4. **Failles exploitées** : 3 fiches techniques en 5 points, chacun avec sa provenance ; texte officiel en anglais signalé quand il n'existe pas de publication du CERT-FR
-5. **Radar** : failles par gravité, provenance des infos, brèves Monde / France (langue d'origine), arnaque du moment associée à une fiche
-6–7. **L'histoire** : un événement majeur des 15 dernières années (contexte, déroulement, faille, victimes, conséquences, enseignements), avec chronologie, schéma et lexique
+5. **Radar** : failles par gravité, provenance des infos, brèves Monde / France (4 par colonne, langue d'origine)
+6. **Arnaques** : l'alerte du moment (manuelle ou presse) ou « La fiche du numéro », puis la fiche de la bibliothèque : comment ça marche, les signes, le bon réflexe, si vous êtes victime, où signaler
+7–8. **L'histoire** : un événement majeur des 15 dernières années (contexte, déroulement, faille, victimes, conséquences, enseignements), avec chronologie, schéma et lexique
 
 ## Plan de la V3
 
@@ -122,7 +132,7 @@ Chaque étape se termine par quelque chose que je peux lancer et vérifier.
 4. Gabarits TRACES avec de **fausses données**, pour voir le magazine tôt
 5. Branchement des vraies données sur les gabarits
 6. Rédaction sans IA : interface commune, traduction des vecteurs CVSS, extraction des sections officielles du CERT-FR, glossaire CWE, marques de provenance
-7. Bibliothèques : une dizaine d'épisodes Histoire vérifiés (premier épisode : WannaCry, 2017), les fiches Arnaques, le lexique
+7. Bibliothèques : une dizaine d'épisodes Histoire vérifiés (premier épisode : WannaCry, 2017), le lexique, et la relecture des fiches Arnaques (8 fiches rédigées, `"verifie": false` tant qu'elles ne sont pas relues) et du glossaire CWE
 8. Export PDF et lancement automatique chaque matin (Planificateur de tâches Windows)
 9. *(Plus tard, optionnel)* Rédacteur IA locale avec Ollama, selon la puissance du PC, avec retour automatique au mode sans IA en cas d'échec
 

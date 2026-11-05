@@ -8,14 +8,13 @@ from datetime import datetime, timedelta, timezone
 
 import config
 
-from . import certfr, cisa_kev, cybermalveillance, presse
+from . import certfr, cisa_kev, presse
 from .article import Article
 
 log = logging.getLogger(__name__)
 
 COLLECTEURS = {
     "CERT-FR": certfr.collecter,
-    "Cybermalveillance": cybermalveillance.collecter,
     "CISA KEV": cisa_kev.collecter,
     "Presse": presse.collecter,
 }

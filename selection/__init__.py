@@ -3,7 +3,7 @@ Sélection : choisit ce qui entre dans le numéro du jour.
   - la une : une faille importante et récente (jamais choisie à cause d'un simple « avis » CERT-FR)
   - les failles exploitées : les plus graves du catalogue CISA, hors une
   - les brèves Monde (presse en anglais) et France (presse en français)
-  - l'alerte Cybermalveillance pour « L'arnaque du moment »
+  - la rubrique Arnaques (voir selection/arnaque.py)
 
 Ce module ne rédige rien : il choisit. La mise en forme est faite par mise_en_page.
 """
@@ -15,6 +15,9 @@ from datetime import datetime, timedelta, timezone
 import config
 from collecteurs.article import Article
 from enrichissement.faille import Faille
+from redaction.outils import nom_produit
+
+from .arnaque import ChoixArnaque, choisir_arnaque
 
 log = logging.getLogger(__name__)
 
@@ -27,27 +30,29 @@ class Selection:
     failles: list[Faille]            # failles exploitées en fiches (page 4)
     breves_monde: list[Article]
     breves_france: list[Article]
-    alerte_arnaque: Article | None   # None si Cybermalveillance n'a rien publié
+    arnaque: ChoixArnaque            # jamais vide (au pire : la fiche du numéro)
 
 
-def selectionner(articles: list[Article], failles: list[Faille]) -> Selection:
+def selectionner(articles: list[Article], failles: list[Faille], numero: int) -> Selection:
     if not failles:
         raise ValueError("Aucune faille collectée : impossible de composer la une. "
                          "Vérifie la connexion Internet (lance avec --debug pour le détail).")
 
     une = choisir_une(failles)
     exploitees = choisir_failles_exploitees(failles, exclure=une)
-    presse = [a for a in articles if a.type_source == "presse"]
-    alerte = next((a for a in articles if a.source == "Cybermalveillance"), None)
+    arnaque = choisir_arnaque(articles, numero)
+    # L'article choisi pour la rubrique Arnaques n'est pas répété dans les brèves
+    lien_arnaque = arnaque.alerte["lien"] if arnaque.alerte else None
+    presse = [a for a in articles if a.type_source == "presse" and a.lien != lien_arnaque]
 
-    log.info("[Sélection] une : %s · %d failles exploitées · arnaque : %s",
-             une.cve, len(exploitees), "oui" if alerte else "aucune alerte")
+    log.info("[Sélection] une : %s · %d failles exploitées · arnaques : %s",
+             une.cve, len(exploitees), arnaque.mode)
     return Selection(
         une=une,
         failles=exploitees,
         breves_monde=_varier([a for a in presse if a.langue == "en"], config.NB_BREVES),
         breves_france=_varier([a for a in presse if a.langue == "fr"], config.NB_BREVES),
-        alerte_arnaque=alerte,
+        arnaque=arnaque,
     )
 
 
@@ -75,8 +80,20 @@ def choisir_failles_exploitees(failles: list[Faille], exclure: Faille) -> list[F
     tri = lambda f: (f.score or 0, date_recente(f))
     # On prend d'abord les failles récentes, et on complète avec les plus anciennes si besoin
     recentes = sorted(_recentes(exploitees, config.FENETRE_UNE_JOURS), key=tri, reverse=True)
-    autres = sorted([f for f in exploitees if f not in recentes], key=tri, reverse=True)
-    return (recentes + autres)[:config.NB_FAILLES_EXPLOITEES]
+    cves_recentes = {f.cve for f in recentes}
+    autres = sorted([f for f in exploitees if f.cve not in cves_recentes], key=tri, reverse=True)
+
+    # Un produit n'apparaît qu'une fois dans le numéro : une alerte PHP qui cite deux CVE
+    # ne doit pas donner la une ET une fiche sur PHP
+    choisies, produits_vus = [], {nom_produit(exclure)}
+    for faille in recentes + autres:
+        produit = nom_produit(faille)
+        if produit not in produits_vus:
+            choisies.append(faille)
+            produits_vus.add(produit)
+        if len(choisies) == config.NB_FAILLES_EXPLOITEES:
+            break
+    return choisies
 
 
 # --- Outils ---------------------------------------------------------------------

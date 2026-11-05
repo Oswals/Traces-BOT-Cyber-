@@ -1,0 +1,50 @@
+{
+  "id": "faux-conseiller-bancaire",
+  "nom": "Le faux conseiller bancaire",
+  "verifie": false,
+  "resume": "Un escroc appelle en se présentant comme le service fraude de la banque, parfois en affichant son vrai numéro (usurpation). Il prétend bloquer une opération suspecte et fait valider par la victime un virement ou un ajout de bénéficiaire.",
+  "signes": [
+    "L'appel arrive souvent juste après un SMS ou un courriel d'hameçonnage.",
+    "Le « conseiller » demande un code de validation, de valider une opération dans l'application ou de remettre sa carte à un coursier.",
+    "Il presse et dramatise : « votre argent est en danger, il faut agir maintenant »."
+  ],
+  "reflexe": "Une banque ne demande jamais un code de validation ni de valider une opération par téléphone : raccrocher et rappeler soi-même le numéro habituel de son agence.",
+  "si_victime": [
+    "Appeler sa banque au numéro officiel pour bloquer les opérations et faire opposition.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "Opposition bancaire",
+      "detail": "Faire opposition auprès de sa banque, ou au 0 892 705 705 (serveur interbancaire).",
+      "lien": ""
+    },
+    {
+      "nom": "Info Escroqueries",
+      "detail": "0 805 805 817 (appel gratuit) : conseils et orientation en cas d'escroquerie.",
+      "lien": ""
+    },
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    }
+  ],
+  "mots_cles": [
+    "faux conseiller",
+    "fausse conseillère",
+    "conseiller bancaire",
+    "banque",
+    "vishing",
+    "spoofing",
+    "usurpation",
+    "virement"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

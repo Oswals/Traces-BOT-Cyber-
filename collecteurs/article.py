@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 
-# officiel = autorité publique (CERT-FR, Cybermalveillance)
+# officiel = autorité publique (CERT-FR)
 # base     = base de données de failles (CISA KEV)
 # presse   = média
 TYPES_SOURCE = ("officiel", "base", "presse")

@@ -1,0 +1,43 @@
+{
+  "id": "faux-ordre-virement",
+  "nom": "Le faux ordre de virement (entreprises)",
+  "verifie": false,
+  "resume": "Un escroc se fait passer pour un dirigeant, un fournisseur ou un avocat et demande un virement urgent et confidentiel, ou un changement de coordonnées bancaires (RIB) pour les prochains paiements. Il s'appuie souvent sur une boîte mail piratée ou une adresse presque identique.",
+  "signes": [
+    "Une demande urgente et confidentielle qui contourne les procédures habituelles.",
+    "Un changement de RIB annoncé par courriel, juste avant une échéance.",
+    "Une adresse d'expéditeur légèrement différente de l'adresse habituelle."
+  ],
+  "reflexe": "Toujours vérifier par un autre canal (téléphone à un numéro déjà connu, pas celui du message) avant un virement ou un changement de RIB.",
+  "si_victime": [
+    "Contacter immédiatement sa banque pour demander le rappel des fonds : les premières heures comptent.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    },
+    {
+      "nom": "Info Escroqueries",
+      "detail": "0 805 805 817 (appel gratuit) : conseils et orientation en cas d'escroquerie.",
+      "lien": ""
+    }
+  ],
+  "mots_cles": [
+    "fraude au président",
+    "faux ordre de virement",
+    "fovi",
+    "changement de rib",
+    "compromission de messagerie",
+    "usurpation"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

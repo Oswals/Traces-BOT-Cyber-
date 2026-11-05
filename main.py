@@ -97,14 +97,16 @@ def main() -> None:
         afficher_resume(articles)
         afficher_failles(failles)
 
+    # Le numéro est connu avant la sélection : il sert à faire tourner la « fiche du numéro »
+    aujourd_hui = date.today()
+    numero_jour = numero_du_jour(aujourd_hui)
     try:
-        selection = selectionner(articles, failles)
+        selection = selectionner(articles, failles, numero_jour)
     except ValueError as erreur:
         logging.error("%s", erreur)
         sys.exit(1)
 
-    aujourd_hui = date.today()
-    numero = assembler(selection, articles, failles, numero_du_jour(aujourd_hui), aujourd_hui)
+    numero = assembler(selection, articles, failles, numero_jour, aujourd_hui)
     chemin = generer_html(numero, config.DOSSIER_SORTIE / f"traces_{aujourd_hui.isoformat()}.html")
     print(f"\nTRACES N°{numero['numero']:02d} généré : {chemin}")
     print(f"À la une : {numero['une']['titre']}")

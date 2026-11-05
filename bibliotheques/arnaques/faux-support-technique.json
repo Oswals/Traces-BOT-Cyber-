@@ -1,0 +1,45 @@
+{
+  "id": "faux-support-technique",
+  "nom": "Le faux support technique",
+  "verifie": false,
+  "resume": "Une fenêtre bloque le navigateur et annonce un virus, avec un numéro « d'assistance » à appeler. Le faux technicien fait installer un logiciel de prise en main à distance, puis réclame un paiement pour un dépannage inutile.",
+  "signes": [
+    "Un message alarmant qui bloque l'écran, parfois avec une alarme sonore.",
+    "Un numéro à appeler en urgence, présenté comme celui de Microsoft, Apple ou de l'antivirus.",
+    "Une demande d'installer un logiciel d'accès à distance ou de payer par carte, carte cadeau ou crypto-monnaie."
+  ],
+  "reflexe": "Ne jamais appeler le numéro affiché : fermer le navigateur (au besoin en redémarrant l'appareil). Les éditeurs n'affichent jamais de numéro dans une alerte de ce type.",
+  "si_victime": [
+    "Désinstaller le logiciel de prise en main à distance et lancer une analyse antivirus.",
+    "Changer les mots de passe saisis pendant la session.",
+    "Si un paiement a été fait : contacter sa banque pour tenter de le bloquer.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    },
+    {
+      "nom": "Info Escroqueries",
+      "detail": "0 805 805 817 (appel gratuit) : conseils et orientation en cas d'escroquerie.",
+      "lien": ""
+    }
+  ],
+  "mots_cles": [
+    "faux support",
+    "support technique",
+    "assistance technique",
+    "tech support",
+    "prise en main à distance",
+    "fausse alerte virus"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

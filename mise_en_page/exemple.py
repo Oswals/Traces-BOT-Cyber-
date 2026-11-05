@@ -8,6 +8,10 @@ Valeurs possibles :
   niveau     : "faible", "moyenne", "haute", "critique" (niveau de menace CVSS)
 """
 
+import json
+
+from config import DOSSIER_ARNAQUES
+
 LIEN_DEMO = "https://example.org/"  # domaine réservé aux exemples, ne mène nulle part
 
 NUMERO = {
@@ -139,7 +143,6 @@ NUMERO = {
             {"source": "CERT-FR", "nombre": 49}, {"source": "The Hacker News", "nombre": 50},
             {"source": "CISA KEV", "nombre": 32}, {"source": "BleepingComputer", "nombre": 15},
             {"source": "Zataz", "nombre": 10}, {"source": "LeMagIT", "nombre": 8},
-            {"source": "Cybermalveillance", "nombre": 3},
         ],
         "breves_monde": [
             {"titre": "Acme warns of a new phishing wave targeting SecureGate admins",
@@ -160,18 +163,18 @@ NUMERO = {
              "resume": "Le projet vise à surveiller en continu les établissements les plus petits.",
              "source": "LeMagIT", "langue": "fr", "lien": LIEN_DEMO},
         ],
-        "arnaque": {
-            "alerte": {"titre": "Hameçonnage aux faux votes pour des concours sur une messagerie",
-                       "source": "Cybermalveillance", "lien": LIEN_DEMO},
-            "fiche": {
-                "nom": "Le vol de compte de messagerie",
-                "signes": ["Un proche vous demande de voter pour lui via un lien.",
-                           "Le site demande votre numéro puis un code reçu par SMS.",
-                           "Le message insiste sur l'urgence."],
-                "reflexe": "Ne jamais transmettre un code reçu par SMS. Activer la double "
-                           "authentification de la messagerie.",
-            },
-        },
+    },
+
+    # --- Page 6 : arnaques (alerte fictive + vraie fiche de la bibliothèque) -------------
+    "arnaque": {
+        "mode": "presse",
+        "rubrique": "L'arnaque du moment",
+        "alerte": {"titre": "Faux concours sur une messagerie : une vague de vols de comptes",
+                   "resume": "Des messages envoyés par des proches piratés invitent à voter pour un "
+                             "concours. Le site demande le numéro de téléphone puis le code reçu par SMS.",
+                   "source": "Zataz", "langue": "fr", "lien": LIEN_DEMO, "date": "2 novembre 2026"},
+        "fiche": json.loads((DOSSIER_ARNAQUES / "vol-compte-messagerie.json").read_text(encoding="utf-8")),
+        "lien_cybermalveillance": "https://www.cybermalveillance.gouv.fr/",
     },
 
     # --- Pages 6 et 7 : l'histoire (bibliothèque vérifiée, étape 7) ---------------

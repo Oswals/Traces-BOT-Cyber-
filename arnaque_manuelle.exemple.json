@@ -1,0 +1,9 @@
+{
+  "_mode_d_emploi": "Copier ce fichier en data/arnaque_manuelle.json et le remplir à partir d'une alerte lue sur cybermalveillance.gouv.fr. Il est utilisé pendant 7 jours après sa date, puis ignoré. « fiche » est facultatif : identifiant d'une fiche de bibliotheques/arnaques/ (sinon elle est choisie par mots-clés).",
+  "date": "2026-11-05",
+  "titre": "Hameçonnage aux faux votes pour des concours sur WhatsApp",
+  "resume": "Vous avez reçu un message d'une connaissance vous incitant à voter pour un concours ? Il peut s'agir d'une arnaque.",
+  "lien": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/vigilance-faux-vote-whatsapp",
+  "source": "Cybermalveillance",
+  "fiche": "vol-compte-messagerie"
+}

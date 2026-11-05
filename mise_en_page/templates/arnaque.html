@@ -1,0 +1,72 @@
+{% from "_macros.html" import entete, folio, prov %}
+{% set a = numero.arnaque %}
+{% set f = a.fiche %}
+
+{# --- Page 6 : arnaques. Jamais vide : alerte manuelle, article de presse ou fiche du numéro --- #}
+<section class="page" id="arnaque">
+  {{ entete(numero, "04", "Arnaques") }}
+  <div class="page-contenu">
+    <h1>{{ a.rubrique }}</h1>
+
+    {% if a.alerte %}
+    {# L'alerte du moment : texte d'une source, avec son lien #}
+    <div class="arnaque alerte-arnaque">
+      <div class="point-tete">
+        <span class="etiquette">{% if a.mode == "manuelle" %}Alerte relevée{% else %}Vu dans la presse{% endif %}{% if a.alerte.date %} · {{ a.alerte.date }}{% endif %}</span>
+        <span>{% if a.alerte.langue != "fr" %}<span class="langue">{{ a.alerte.langue|upper }}</span> {% endif %}{{ prov("source", a.alerte.source, a.alerte.lien) }}</span>
+      </div>
+      <h2{% if a.alerte.langue != "fr" %} lang="{{ a.alerte.langue }}"{% endif %}><a href="{{ a.alerte.lien|lien }}">{{ a.alerte.titre }}</a></h2>
+      {% if a.alerte.resume %}<p{% if a.alerte.langue != "fr" %} class="en" lang="{{ a.alerte.langue }}"{% endif %}>{{ a.alerte.resume }}</p>{% endif %}
+    </div>
+    <p class="mono discret">La fiche ci-dessous est associée à cette alerte par mots-clés.</p>
+    {% else %}
+    <p class="discret">Aucune alerte récente n'a été repérée : voici une fiche de la bibliothèque, différente à chaque numéro.</p>
+    {% endif %}
+
+    {# La fiche : rédigée à l'avance et vérifiée (règle n°6) #}
+    <div class="point-tete fiche-arnaque-tete">
+      <h2>{{ f.nom }}</h2>
+      {{ prov("bibliotheque", "Fiche Arnaques", f.lien) }}
+    </div>
+    <p class="chapeau">{{ f.resume }}</p>
+
+    <div class="grille" style="margin-top: 12px">
+      <div class="col-3">
+        <span class="etiquette">Les signes qui doivent alerter</span>
+        <ul class="liste-arnaque">
+          {% for s in f.signes %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+      <div class="col-3 reflexe">
+        <span class="etiquette">Le bon réflexe</span>
+        <p>{{ f.reflexe }}</p>
+      </div>
+    </div>
+
+    <div class="grille" style="margin-top: 14px">
+      <div class="col-3">
+        <span class="etiquette">Si vous êtes victime</span>
+        <ol class="liste-arnaque">
+          {% for s in f.si_victime %}<li>{{ s }}</li>{% endfor %}
+        </ol>
+      </div>
+      <div class="col-3">
+        <span class="etiquette">Où signaler, qui contacter</span>
+        <dl class="signaler">
+          {% for c in f.signaler %}
+          <dt>{% if c.lien %}<a href="{{ c.lien|lien }}">{{ c.nom }}</a>{% else %}{{ c.nom }}{% endif %}</dt>
+          <dd>{{ c.detail }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+
+    <div class="lexique" style="margin-top: 14px">
+      <span class="etiquette">Pour aller plus loin</span>
+      <p>Le dispositif national d'assistance aux victimes publie des alertes et des fiches réflexes :
+        <a href="{{ a.lien_cybermalveillance|lien }}">cybermalveillance.gouv.fr</a>.
+        {% if not f.get("verifie", False) %}<span class="mono discret">Fiche en cours de relecture.</span>{% endif %}</p>
+    </div>
+  </div>
+  {{ folio(numero, 6) }}
+</section>

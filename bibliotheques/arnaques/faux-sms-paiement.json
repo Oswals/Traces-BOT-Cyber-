@@ -1,0 +1,53 @@
+{
+  "id": "faux-sms-paiement",
+  "nom": "Les faux SMS de paiement",
+  "verifie": false,
+  "resume": "Un SMS annonce un colis en attente, une amende impayée ou une démarche à régulariser, et demande de payer quelques euros via un lien. Le faux site récupère les coordonnées bancaires, réutilisées ensuite pour des achats ou un appel de faux conseiller.",
+  "signes": [
+    "Un petit montant à payer pour débloquer un colis, éviter une majoration ou renouveler un service.",
+    "Un lien raccourci ou une adresse de site qui n'est pas celle de l'organisme officiel.",
+    "Un SMS reçu alors qu'aucune commande ou démarche n'est en cours."
+  ],
+  "reflexe": "Ne pas cliquer : vérifier en se connectant soi-même au site officiel du transporteur ou de l'administration.",
+  "si_victime": [
+    "Faire opposition immédiatement si la carte a été saisie.",
+    "Se méfier d'un appel dans les jours suivants : c'est souvent la suite de l'arnaque (faux conseiller).",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "33700",
+      "detail": "Transférer gratuitement le SMS frauduleux au 33700 (ou signaler le numéro d'appel).",
+      "lien": "https://www.33700.fr/"
+    },
+    {
+      "nom": "Opposition bancaire",
+      "detail": "Faire opposition auprès de sa banque, ou au 0 892 705 705 (serveur interbancaire).",
+      "lien": ""
+    },
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    }
+  ],
+  "mots_cles": [
+    "colis",
+    "livraison",
+    "amende",
+    "smishing",
+    "faux sms",
+    "sms frauduleux",
+    "antai",
+    "vignette",
+    "chronopost",
+    "la poste"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

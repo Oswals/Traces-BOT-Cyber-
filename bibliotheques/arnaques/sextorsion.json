@@ -1,0 +1,48 @@
+{
+  "id": "sextorsion",
+  "nom": "Le chantage à la webcam (sextorsion)",
+  "verifie": false,
+  "resume": "Un courriel affirme que l'ordinateur a été piraté et que des vidéos intimes ont été filmées par la webcam. L'auteur menace de les diffuser si une rançon n'est pas payée, souvent en crypto-monnaie. Dans la plupart des cas, il bluffe : il n'a aucune vidéo.",
+  "signes": [
+    "Un courriel menaçant envoyé en masse, parfois depuis votre propre adresse (falsifiée).",
+    "Un ancien mot de passe cité comme « preuve » : il provient d'une fuite de données ancienne.",
+    "Une demande de paiement en crypto-monnaie avec un délai très court."
+  ],
+  "reflexe": "Ne pas répondre et ne pas payer. Changer le mot de passe cité s'il est encore utilisé quelque part.",
+  "si_victime": [
+    "Conserver le message comme preuve, puis le supprimer.",
+    "Si des images existent réellement : ne pas payer, garder les preuves et porter plainte.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "Pharos",
+      "detail": "Signaler un contenu ou un comportement illicite sur Internet.",
+      "lien": "https://www.internet-signalement.gouv.fr/"
+    },
+    {
+      "nom": "Signal Spam",
+      "detail": "Signaler un courriel frauduleux.",
+      "lien": "https://www.signal-spam.fr/"
+    },
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    }
+  ],
+  "mots_cles": [
+    "sextorsion",
+    "chantage",
+    "webcam",
+    "rançon",
+    "vidéo intime"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

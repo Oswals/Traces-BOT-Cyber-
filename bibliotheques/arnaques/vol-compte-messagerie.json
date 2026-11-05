@@ -1,0 +1,47 @@
+{
+  "id": "vol-compte-messagerie",
+  "nom": "Le vol de compte de messagerie ou de réseau social",
+  "verifie": false,
+  "resume": "Un proche (dont le compte a déjà été piraté) demande de voter pour lui, ou de transmettre un code reçu par SMS. Ce code permet en réalité à l'escroc de prendre le contrôle du compte, puis de piéger à leur tour tous ses contacts.",
+  "signes": [
+    "Un message d'un contact qui demande de voter via un lien ou de renvoyer un code reçu par SMS.",
+    "Un site qui demande le numéro de téléphone puis le code de vérification.",
+    "Une insistance inhabituelle ou une formulation qui ne ressemble pas au proche."
+  ],
+  "reflexe": "Ne jamais transmettre un code reçu par SMS, même à un proche. Activer la double authentification (code PIN de vérification) sur ses messageries.",
+  "si_victime": [
+    "Se reconnecter au compte avec son numéro pour en reprendre le contrôle, puis activer la double authentification.",
+    "Prévenir ses contacts par un autre moyen pour qu'ils ne tombent pas dans le piège.",
+    "Porter plainte au commissariat ou à la gendarmerie, en gardant toutes les preuves (captures, messages, numéros)."
+  ],
+  "signaler": [
+    {
+      "nom": "17Cyber",
+      "detail": "Assistance officielle aux victimes de cybermalveillance : diagnostic et mise en relation.",
+      "lien": "https://www.17cyber.gouv.fr/"
+    },
+    {
+      "nom": "Pharos",
+      "detail": "Signaler un contenu ou un comportement illicite sur Internet.",
+      "lien": "https://www.internet-signalement.gouv.fr/"
+    }
+  ],
+  "mots_cles": [
+    "whatsapp",
+    "instagram",
+    "facebook",
+    "telegram",
+    "compte piraté",
+    "piratage de compte",
+    "faux vote",
+    "code de vérification",
+    "messagerie"
+  ],
+  "sources": [
+    {
+      "titre": "Cybermalveillance.gouv.fr (dispositif national d'assistance)",
+      "lien": "https://www.cybermalveillance.gouv.fr/"
+    }
+  ],
+  "lien": "https://www.cybermalveillance.gouv.fr/"
+}

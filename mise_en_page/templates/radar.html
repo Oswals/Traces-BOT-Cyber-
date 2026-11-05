@@ -50,32 +50,6 @@
         {% for b in radar.breves_france %}{{ breve(b) }}{% endfor %}
       </div>
     </div>
-
-    {% set arnaque = radar.arnaque %}
-    {% if arnaque.alerte %}
-    <div class="arnaque" style="margin-top: 20px">
-      <div class="point-tete">
-        <h2 style="margin: 0">L'arnaque du moment</h2>
-        {{ prov("source", arnaque.alerte.source, arnaque.alerte.lien) }}
-      </div>
-      <p><a href="{{ arnaque.alerte.lien|lien }}">{{ arnaque.alerte.titre }}</a></p>
-      {% if arnaque.alerte.get("resume") %}<p class="discret">{{ arnaque.alerte.resume }}</p>{% endif %}
-      {% if arnaque.fiche %}
-      <div class="point-tete"><h3 style="margin: 0">{{ arnaque.fiche.nom }}</h3>{{ prov("bibliotheque", "Fiche Arnaques") }}</div>
-      <div class="grille">
-        <div class="col-4">
-          <span class="etiquette">Les signes</span>
-          <ul>
-            {% for s in arnaque.fiche.signes %}<li>{{ s }}</li>{% endfor %}
-          </ul>
-        </div>
-        <div class="col-2 reflexe"><span class="etiquette">Le bon réflexe</span><p>{{ arnaque.fiche.reflexe }}</p></div>
-      </div>
-      {% else %}
-      <p class="mono discret">Fiche Arnaques associée : bibliothèque en préparation.</p>
-      {% endif %}
-    </div>
-    {% endif %}
   </div>
   {{ folio(numero, 5) }}
 </section>

@@ -37,7 +37,8 @@
     <span class="{{ classe_question }}">{{ p.question }}</span>
     <span>{{ prov(p.provenance, p.source, p.get("lien", "")) }}</span>
   </div>
-  <p{% if p.source.endswith("(EN)") %} class="en" lang="en"{% endif %}>{{ p.texte }}</p>
+  {# Texte resté en anglais : en italique, avec lang="en" pour les lecteurs d'écran #}
+  <p{% if p.get("langue", "fr") != "fr" or p.source.endswith("(EN)") %} class="en" lang="en"{% endif %}>{{ p.texte }}</p>
 </div>
 {%- endmacro %}
 

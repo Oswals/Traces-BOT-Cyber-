@@ -39,12 +39,11 @@
         <div class="titre">{{ numero.failles|length }} failles exploitées en fiches</div>
       </li>
       <li>
-        <div class="code-rubrique">[03] Radar</div>
-        {% set arnaque = numero.radar.arnaque %}
-        <div class="titre">{% if arnaque.fiche %}{{ arnaque.fiche.nom }}{% elif arnaque.alerte %}L'arnaque du moment{% else %}Brèves Monde et France{% endif %}</div>
+        <div class="code-rubrique">[04] Arnaques</div>
+        <div class="titre">{{ numero.arnaque.fiche.nom }}</div>
       </li>
       <li>
-        <div class="code-rubrique">[04] Histoire</div>
+        <div class="code-rubrique">[05] Histoire</div>
         <div class="titre">{% if numero.histoire %}{{ numero.histoire.titre }} ({{ numero.histoire.annee }}){% else %}Épisodes en préparation{% endif %}</div>
       </li>
     </ol>
