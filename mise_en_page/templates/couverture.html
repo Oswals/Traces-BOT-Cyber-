@@ -1,0 +1,52 @@
+{% from "_macros.html" import entete, folio, libelle_niveau %}
+{% set une = numero.une %}
+<section class="page" id="couverture">
+  {{ entete(numero, "", "Veille cyber") }}
+  <div class="page-contenu">
+    <div class="marque">TRACES</div>
+    <div class="sous-marque">Dossier d'enquête quotidien · vulnérabilités, menaces, histoire</div>
+    {% if numero.demo %}
+    <div class="bandeau-demo">Numéro de démonstration : produits, failles et articles sont fictifs.</div>
+    {% endif %}
+
+    <div class="grille couv-une">
+      <div class="col-4">
+        <div class="code-rubrique">[01] À la une</div>
+        <h1>{{ une.titre }}</h1>
+        <p class="titre-officiel">{{ une.titre_officiel }}</p>
+      </div>
+      <div class="col-2 score-menace niv-{{ une.niveau }}">
+        <span class="etiquette">Niveau de menace</span>
+        <div class="score-chiffre">{{ une.score|virgule }}<small>/10</small></div>
+        <span class="score-niveau">{{ libelle_niveau(une.niveau) }}</span>
+      </div>
+    </div>
+
+    {# Fiche flash : l'essentiel en 4 lignes #}
+    <table class="fiche fiche-flash">
+      <tr><th>CVE</th><td class="cve">{{ une.cve }}</td></tr>
+      <tr><th>Produit</th><td>{{ une.produit }}</td></tr>
+      <tr><th>Exploitée</th><td>{% if une.exploitee %}<span class="exploitee">Oui, activement</span>{% else %}Pas d'exploitation connue{% endif %}</td></tr>
+      <tr><th>Source</th><td>{{ une.resume.source }}</td></tr>
+    </table>
+  </div>
+
+  <div class="aussi">
+    <span class="etiquette">Aussi dans ce numéro</span>
+    <ol>
+      <li>
+        <div class="code-rubrique">[02] Failles</div>
+        <div class="titre">{{ numero.failles|length }} failles exploitées en fiches</div>
+      </li>
+      <li>
+        <div class="code-rubrique">[03] Radar</div>
+        <div class="titre">{{ numero.radar.arnaque.fiche.nom }}</div>
+      </li>
+      <li>
+        <div class="code-rubrique">[04] Histoire</div>
+        <div class="titre">{{ numero.histoire.titre }} ({{ numero.histoire.annee }})</div>
+      </li>
+    </ol>
+  </div>
+  {{ folio(numero, 1) }}
+</section>

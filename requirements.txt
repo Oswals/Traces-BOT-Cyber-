@@ -2,4 +2,4 @@
 python-dotenv==1.2.4   # lit le fichier .env (clés d'API)
 requests==2.34.2       # télécharge les pages et les flux
 feedparser==6.0.14     # lit les flux RSS / Atom
-# Jinja2 sera ajouté à l'étape 4 (gabarits du magazine)
+Jinja2==3.1.6          # remplit les gabarits HTML du magazine

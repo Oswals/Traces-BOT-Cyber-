@@ -6,6 +6,7 @@ et affiche un résumé. Les étapes suivantes (sélection, mise en page...) s'aj
 
 Utilisation :
     python main.py           -> résumé de la collecte
+    python main.py --demo    -> numéro de démonstration (données fictives, sans Internet)
     python main.py --debug   -> messages détaillés pour déboguer
 """
 
@@ -16,6 +17,7 @@ from collections import defaultdict
 import config
 from collecteurs import collecter_tout
 from enrichissement import enrichir
+from mise_en_page import generer_html
 
 EXEMPLES_PAR_SOURCE = 3  # nombre de titres affichés par source
 FAILLES_AFFICHEES = 10   # nombre de failles affichées dans le résumé
@@ -71,6 +73,7 @@ def afficher_failles(failles: list) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="TRACES, magazine de veille cyber")
+    parser.add_argument("--demo", action="store_true", help="numéro de démonstration (données fictives)")
     parser.add_argument("--debug", action="store_true", help="logs détaillés")
     args = parser.parse_args()
 
@@ -78,6 +81,12 @@ def main() -> None:
                         format="%(levelname)s: %(message)s")
 
     preparer_dossiers()
+    if args.demo:
+        from mise_en_page.exemple import NUMERO
+        chemin = generer_html(NUMERO, config.DOSSIER_SORTIE / "traces_demo.html")
+        print(f"Numéro de démonstration généré : {chemin}")
+        return
+
     articles = collecter_tout()
     afficher_resume(articles)
     failles = enrichir(articles)

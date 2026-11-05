@@ -1,0 +1,74 @@
+{% from "_macros.html" import entete, folio, prov, libelle_niveau %}
+{% set radar = numero.radar %}
+{% set total_gravite = radar.gravite|sum(attribute="nombre") %}
+{% set max_provenance = radar.provenance|map(attribute="nombre")|max %}
+
+{% macro breve(b) -%}
+<article class="breve">
+  <div class="breve-meta"><span class="langue">{{ b.langue|upper }}</span>{{ prov("source", b.source, b.lien) }}</div>
+  <h3{% if b.langue != "fr" %} lang="{{ b.langue }}"{% endif %}><a href="{{ b.lien }}">{{ b.titre }}</a></h3>
+  <p{% if b.langue != "fr" %} lang="{{ b.langue }}"{% endif %}>{{ b.resume }}</p>
+</article>
+{%- endmacro %}
+
+<section class="page" id="radar">
+  {{ entete(numero, "03", "Radar") }}
+  <div class="page-contenu">
+    <div class="grille">
+      <div class="col-4">
+        <div class="point-tete"><h3>Les failles du jour par gravité</h3>{{ prov("calcule") }}</div>
+        <div class="barre">
+          {% for g in radar.gravite if g.nombre %}
+          <div class="niv-{{ g.niveau }}" style="flex: {{ g.nombre }}">{{ g.nombre }}</div>
+          {% endfor %}
+        </div>
+        <p class="mono discret">
+          {% for g in radar.gravite %}{{ libelle_niveau(g.niveau) }} {{ g.nombre }}{% if not loop.last %} · {% endif %}{% endfor %}
+          {% if radar.sans_score %} · non évaluées {{ radar.sans_score }}{% endif %}
+        </p>
+      </div>
+      <div class="col-2">
+        <div class="point-tete"><h3>D'où viennent les infos</h3></div>
+        <ul class="repartition">
+          {% for p in radar.provenance %}
+          <li>
+            <div><span class="nom">{{ p.source }}</span><div class="jauge" style="width: {{ (100 * p.nombre / max_provenance)|round|int }}%"></div></div>
+            <span class="nb">{{ p.nombre }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="grille" style="margin-top: 20px">
+      <div class="col-3">
+        <h2>Monde</h2>
+        {% for b in radar.breves_monde %}{{ breve(b) }}{% endfor %}
+      </div>
+      <div class="col-3">
+        <h2>France</h2>
+        {% for b in radar.breves_france %}{{ breve(b) }}{% endfor %}
+      </div>
+    </div>
+
+    {% set arnaque = radar.arnaque %}
+    <div class="arnaque" style="margin-top: 20px">
+      <div class="point-tete">
+        <h2 style="margin: 0">L'arnaque du moment</h2>
+        {{ prov("source", arnaque.alerte.source, arnaque.alerte.lien) }}
+      </div>
+      <p><a href="{{ arnaque.alerte.lien }}">{{ arnaque.alerte.titre }}</a></p>
+      <div class="point-tete"><h3 style="margin: 0">{{ arnaque.fiche.nom }}</h3>{{ prov("bibliotheque", "Fiche Arnaques") }}</div>
+      <div class="grille">
+        <div class="col-4">
+          <span class="etiquette">Les signes</span>
+          <ul>
+            {% for s in arnaque.fiche.signes %}<li>{{ s }}</li>{% endfor %}
+          </ul>
+        </div>
+        <div class="col-2 reflexe"><span class="etiquette">Le bon réflexe</span><p>{{ arnaque.fiche.reflexe }}</p></div>
+      </div>
+    </div>
+  </div>
+  {{ folio(numero, 5) }}
+</section>

@@ -1,0 +1,424 @@
+/* ==========================================================================
+   TRACES : feuille de style du magazine
+   Page A4 = 794 x 1123 px, marges 64 px, grille 6 colonnes, gouttière 24 px.
+   Aucun texte sous 12 px.
+   ========================================================================== */
+
+:root {
+  /* Couleurs de l'identité */
+  --encre: #111418;
+  --papier: #F6F6F3;
+  --signal: #2E47E6;
+  --brume: #E8ECFD;
+  --alerte: #E8590C;      /* danger uniquement */
+  --graphite: #4B5058;
+  --filet: #CFD2D6;
+  --bureau: #D9DBDE;      /* fond derrière les pages, à l'écran */
+
+  /* Niveau de menace (CVSS) */
+  --niv-faible: #D9DCE1;
+  --niv-moyenne: #F6B98A;
+  --niv-haute: #E8590C;
+  --niv-critique: #111418;
+
+  /* Polices */
+  --police-titre: "Archivo", "Arial Narrow", sans-serif;
+  --police-texte: "Source Serif 4", Georgia, serif;
+  --police-code: "IBM Plex Mono", Consolas, monospace;
+
+  --marge: 64px;
+  --gouttiere: 24px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bureau);
+  color: var(--encre);
+  font-family: var(--police-texte);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+a { color: inherit; text-decoration-color: var(--filet); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--signal); }
+p { margin: 0 0 8px; }
+
+/* --- Page --------------------------------------------------------------- */
+
+.page {
+  position: relative;
+  width: 794px;
+  height: 1123px;
+  margin: 32px auto;
+  padding: calc(var(--marge) - 8px) var(--marge) 40px;
+  background: var(--papier);
+  box-shadow: 0 2px 12px rgba(17, 20, 24, .15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Filet signal de 10 px en tête de page */
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 10px;
+  background: var(--signal);
+}
+
+.page-contenu { flex: 1; min-height: 0; }
+
+/* En-tête « TRACES · N°xx · date » et rubrique */
+.entete {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  white-space: nowrap;
+  font-family: var(--police-code);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--encre);
+  margin-bottom: 24px;
+}
+.entete .rubrique { color: var(--signal); }
+.entete .demo { color: var(--graphite); }
+
+/* Folio en pied de page */
+.folio {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--police-code);
+  font-size: 12px;
+  color: var(--graphite);
+  border-top: 1px solid var(--filet);
+  padding-top: 8px;
+  margin-top: 16px;
+}
+
+/* --- Grille 6 colonnes ---------------------------------------------------- */
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gouttiere);
+}
+.col-2 { grid-column: span 2; }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-6 { grid-column: span 6; }
+
+/* --- Typographie -------------------------------------------------------- */
+
+.titre, h1, h2, h3 {
+  font-family: var(--police-titre);
+  font-stretch: 75%;          /* Archivo Condensed */
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+}
+h1 { font-size: 44px; letter-spacing: -.01em; }
+h2 { font-size: 26px; margin-bottom: 12px; }
+h3 { font-size: 18px; margin-bottom: 6px; }
+
+.code-rubrique {
+  font-family: var(--police-code);
+  font-size: 12px;
+  color: var(--signal);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.mono, .cve { font-family: var(--police-code); font-size: 12px; }
+.cve { letter-spacing: .02em; }
+.discret { color: var(--graphite); }
+.etiquette {
+  font-family: var(--police-code);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--graphite);
+}
+
+/* --- Marques de provenance ---------------------------------------------- */
+
+.prov {
+  display: inline-block;
+  font-family: var(--police-code);
+  font-size: 12px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 3px 6px;
+  border: 1.5px solid var(--encre);
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+.prov-source       { color: var(--encre); }
+.prov-calcule      { color: var(--signal); border-color: var(--signal); }
+.prov-bibliotheque { color: var(--papier); background: var(--encre); }
+.prov-ia_locale    { color: var(--signal); border-color: var(--signal); border-style: dashed; }
+.prov-groupe { white-space: nowrap; }
+.prov-origine { font-family: var(--police-code); font-size: 12px; color: var(--graphite); margin-left: 4px; }
+
+/* --- Niveau de menace --------------------------------------------------- */
+
+.niv-faible   { background: var(--niv-faible);   color: var(--encre); }
+.niv-moyenne  { background: var(--niv-moyenne);  color: var(--encre); }
+.niv-haute    { background: var(--niv-haute);    color: var(--papier); }
+.niv-critique { background: var(--niv-critique); color: var(--papier); }
+
+.pastille {
+  display: inline-block;
+  font-family: var(--police-code);
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.exploitee {
+  display: inline-block;
+  font-family: var(--police-code);
+  font-size: 12px;
+  line-height: 1;
+  padding: 3px 6px;
+  color: var(--alerte);
+  border: 1.5px solid var(--alerte);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+/* --- Encadré COMPRENDRE -------------------------------------------------- */
+
+.comprendre {
+  background: var(--brume);
+  padding: 16px 20px 12px;
+  border-top: 3px solid var(--signal);
+}
+.comprendre > .etiquette { color: var(--signal); margin-bottom: 8px; display: block; }
+.point { padding: 8px 0; border-top: 1px solid rgba(46, 71, 230, .2); }
+.point:first-of-type { border-top: 0; padding-top: 0; }
+.point-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 2px; }
+.point-question { font-family: var(--police-titre); font-stretch: 75%; font-weight: 700; font-size: 16px; }
+.point p { margin: 0; font-size: 13.5px; line-height: 1.45; }
+
+/* Fiche d'identité en colonne étroite : libellé au-dessus de la valeur */
+.identite { margin: 4px 0 12px; }
+.identite dt { font-family: var(--police-code); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--graphite); border-top: 1px solid var(--filet); padding-top: 3px; }
+.identite dd { margin: 0 0 3px; font-size: 13px; line-height: 1.35; }
+
+/* --- Lexique ------------------------------------------------------------ */
+
+.lexique { border-top: 1px solid var(--encre); padding-top: 8px; }
+.lexique > .etiquette { display: block; margin-bottom: 6px; }
+.lexique dl { margin: 0; }
+.lexique dt { font-family: var(--police-titre); font-stretch: 75%; font-weight: 700; font-size: 14px; display: inline; }
+.lexique dd { display: inline; margin: 0; font-size: 13px; line-height: 1.4; }
+.lexique dd::after { content: ""; display: block; margin-bottom: 4px; }
+
+/* --- Tableaux d'identité ------------------------------------------------- */
+
+.fiche { width: 100%; border-collapse: collapse; }
+.fiche th, .fiche td { text-align: left; vertical-align: top; padding: 5px 0; border-bottom: 1px solid var(--filet); }
+.fiche th {
+  width: 34%;
+  font-family: var(--police-code);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--graphite);
+  padding-right: 12px;
+}
+
+/* ==========================================================================
+   Page 1 : couverture
+   ========================================================================== */
+
+.marque {
+  font-family: var(--police-titre);
+  font-stretch: 125%;         /* Archivo Expanded */
+  font-weight: 800;
+  font-size: 112px;
+  line-height: .85;
+  letter-spacing: -.02em;
+  margin: 8px 0 4px;
+}
+.sous-marque { font-family: var(--police-code); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--graphite); }
+.bandeau-demo {
+  margin-top: 16px;
+  padding: 8px 12px;
+  border: 1.5px dashed var(--graphite);
+  font-family: var(--police-code);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--graphite);
+}
+
+.couv-une { margin-top: 48px; }
+.couv-une h1 { font-size: 60px; margin-bottom: 12px; }
+.couv-une .titre-officiel { color: var(--graphite); font-size: 15px; }
+.fiche-flash { margin-top: 48px; font-size: 16px; }
+.fiche-flash th, .fiche-flash td { padding: 10px 0; }
+
+.score-menace { padding: 20px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
+.score-menace .etiquette { color: inherit; opacity: .8; }
+.score-chiffre {
+  font-family: var(--police-titre);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 104px;
+  line-height: .9;
+  white-space: nowrap;
+}
+.score-chiffre small { font-size: 28px; font-weight: 600; }
+.score-niveau { font-family: var(--police-code); font-size: 14px; text-transform: uppercase; letter-spacing: .1em; }
+
+.aussi {
+  border-top: 3px solid var(--encre);
+  padding-top: 12px;
+}
+.aussi ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gouttiere); }
+.aussi li { border-top: 1px solid var(--filet); padding-top: 8px; }
+.aussi .code-rubrique { margin-bottom: 4px; }
+.aussi .titre { font-size: 18px; }
+
+/* ==========================================================================
+   Page 2 : sommaire
+   ========================================================================== */
+
+.chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gouttiere); margin-bottom: 8px; }
+.chiffre { border-top: 3px solid var(--signal); padding-top: 8px; }
+.chiffre-valeur { font-family: var(--police-titre); font-stretch: 75%; font-weight: 800; font-size: 64px; line-height: 1; color: var(--signal); }
+.chiffre-libelle { font-family: var(--police-code); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+.sommaire { list-style: none; padding: 0; margin: 0; }
+.sommaire li { display: grid; grid-template-columns: 56px 1fr 40px; gap: 12px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--filet); }
+.sommaire .code-rubrique { margin: 0; }
+.sommaire .titre { font-size: 22px; }
+.sommaire .num { font-family: var(--police-code); font-size: 12px; text-align: right; }
+
+.legende { list-style: none; padding: 0; margin: 0; }
+.legende li { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--filet); }
+.echelle { display: grid; grid-template-columns: repeat(4, 1fr); }
+.echelle div { padding: 8px; font-family: var(--police-code); font-size: 12px; }
+
+/* ==========================================================================
+   Page 3 : à la une
+   ========================================================================== */
+
+.une-titres h1 { font-size: 38px; margin-bottom: 4px; }
+.une-titres .titre-officiel { color: var(--graphite); margin: 0; }
+.resume { font-size: 15px; line-height: 1.45; margin: 0; }
+
+.profil { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 6px; }
+.case { padding: 6px 10px; min-height: 50px; min-width: 0; }
+.case-critere { font-family: var(--police-code); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
+.case-valeur { font-family: var(--police-titre); font-stretch: 75%; font-weight: 700; font-size: 17px; line-height: 1.1; margin-top: 4px; }
+
+/* ==========================================================================
+   Page 4 : failles exploitées
+   ========================================================================== */
+
+#failles > .page-contenu > h2 { font-size: 24px; margin-bottom: 8px; }
+.fiche-faille { border-top: 3px solid var(--encre); padding-top: 6px; margin-bottom: 8px; }
+.fiche-faille-tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 4px; }
+.fiche-faille-tete h2 { font-size: 20px; margin-bottom: 2px; }
+.fiche-faille-score { text-align: center; padding: 6px 10px; min-width: 72px; }
+.fiche-faille-score .score-chiffre { font-size: 32px; }
+.points { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: var(--gouttiere); }
+.points .point { border-top: 1px solid var(--filet); padding: 4px 0; }
+.points .point:first-child { border-top: 1px solid var(--filet); padding-top: 4px; }
+.points p { font-size: 13px; line-height: 1.4; }
+.point-question-s { font-family: var(--police-titre); font-stretch: 75%; font-weight: 700; font-size: 15px; }
+.en { font-style: italic; }
+.avis-anglais { font-family: var(--police-code); font-size: 12px; color: var(--graphite); }
+
+/* ==========================================================================
+   Page 5 : radar
+   ========================================================================== */
+
+.barre { display: flex; height: 40px; margin: 8px 0; }
+.barre div { display: flex; align-items: center; justify-content: center; font-family: var(--police-code); font-size: 12px; min-width: 28px; }
+.repartition { list-style: none; padding: 0; margin: 0; }
+.repartition li { display: grid; grid-template-columns: 1fr 28px; gap: 8px; align-items: center; padding: 2px 0; }
+.repartition .jauge { height: 6px; background: var(--signal); margin-top: 1px; }
+.repartition .nom { font-family: var(--police-code); font-size: 12px; }
+.repartition .nb { font-family: var(--police-code); font-size: 12px; text-align: right; }
+
+.breve { padding: 6px 0; border-top: 1px solid var(--filet); }
+.breve h3 { font-size: 16px; margin-bottom: 2px; }
+.breve p { font-size: 13px; line-height: 1.4; margin: 0; }
+.breve-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+.langue { font-family: var(--police-code); font-size: 12px; padding: 2px 5px; border: 1px solid var(--graphite); color: var(--graphite); line-height: 1; }
+
+.arnaque { border: 1.5px solid var(--encre); padding: 12px 16px; }
+.arnaque ul { margin: 4px 0 0; padding-left: 18px; font-size: 13.5px; }
+.reflexe { background: var(--brume); padding: 8px 12px; }
+
+/* Repère de contrôle à l'écran : contenu plus haut que la page A4 */
+.page.deborde { outline: 4px dashed var(--alerte); outline-offset: -4px; }
+@media print { .page.deborde { outline: none; } }
+
+/* ==========================================================================
+   Pages 6 et 7 : l'histoire
+   ========================================================================== */
+
+.histoire-titre h1 { font-size: 52px; }
+.histoire-annee { font-family: var(--police-titre); font-stretch: 125%; font-weight: 800; font-size: 40px; color: var(--signal); line-height: 1; }
+.chapeau { font-size: 17px; line-height: 1.45; margin: 12px 0 0; }
+.section-histoire { margin-bottom: 16px; }
+
+.chronologie { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--signal); }
+.chronologie li { position: relative; padding: 0 0 14px 16px; }
+.chronologie li::before { content: ""; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; background: var(--signal); }
+.chronologie .date { font-family: var(--police-code); font-size: 12px; color: var(--signal); display: block; }
+
+.schema { display: flex; align-items: stretch; gap: 0; margin: 8px 0; }
+.schema-etape { flex: 1; border: 1.5px solid var(--encre); padding: 10px; background: var(--papier); }
+.schema-etape .titre { font-size: 16px; }
+.schema-fleche { align-self: center; padding: 0 6px; font-family: var(--police-code); color: var(--signal); }
+.sources-liste { margin: 0; padding-left: 18px; }
+
+/* ==========================================================================
+   Téléphone : les pages deviennent fluides, la grille passe sur une colonne
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  body { background: var(--papier); }
+  .page { width: auto; height: auto; margin: 0; padding: 32px 16px 24px; box-shadow: none; border-bottom: 8px solid var(--bureau); overflow: visible; }
+  .grille { grid-template-columns: 1fr; gap: 16px; }
+  .col-2, .col-3, .col-4, .col-6 { grid-column: auto; }
+  .marque { font-size: 64px; }
+  .couv-une h1, .histoire-titre h1 { font-size: 36px; }
+  h1 { font-size: 32px; }
+  .score-chiffre { font-size: 88px; }
+  .aussi ol, .chiffres { grid-template-columns: repeat(2, 1fr); }
+  .profil { grid-template-columns: repeat(2, 1fr); }
+  .points { grid-template-columns: 1fr; }
+  .points .point:first-child { grid-column: auto; }
+  .schema { flex-direction: column; }
+  .schema-fleche { transform: rotate(90deg); }
+  .entete { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   Impression / PDF (étape 8)
+   ========================================================================== */
+
+@page { size: A4; margin: 0; }
+@media print {
+  body { background: none; }
+  .page { margin: 0; box-shadow: none; break-after: page; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -1,0 +1,27 @@
+{% from "_macros.html" import entete, folio, point, libelle_niveau %}
+<section class="page" id="failles">
+  {{ entete(numero, "02", "Failles exploitées") }}
+  <div class="page-contenu">
+    <h2>Trois failles déjà utilisées par des attaquants</h2>
+    {% for f in numero.failles %}
+    <article class="fiche-faille">
+      <div class="fiche-faille-tete">
+        <div>
+          <h2>{{ f.titre }}</h2>
+          <span class="cve"><a href="{{ f.lien }}">{{ f.cve }}</a></span>
+          {% if f.exploitee %} <span class="exploitee">Exploitée</span>{% endif %}
+          {% if f.en_anglais %} <span class="avis-anglais">· sans publication CERT-FR : texte CISA en anglais</span>{% endif %}
+        </div>
+        <div class="fiche-faille-score niv-{{ f.niveau }}">
+          <div class="score-chiffre">{{ f.score|virgule }}</div>
+          <div class="mono">{{ libelle_niveau(f.niveau) }}</div>
+        </div>
+      </div>
+      <div class="points">
+        {% for p in f.points %}{{ point(p, "point-question-s") }}{% endfor %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {{ folio(numero, 4) }}
+</section>

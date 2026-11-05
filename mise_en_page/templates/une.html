@@ -1,0 +1,46 @@
+{% from "_macros.html" import entete, folio, prov, point, lexique, libelle_niveau %}
+{% set une = numero.une %}
+<section class="page" id="une">
+  {{ entete(numero, "01", "À la une") }}
+  <div class="page-contenu">
+    <div class="une-titres">
+      <h1>{{ une.titre }}</h1>
+      <p class="titre-officiel">{{ une.titre_officiel }} {{ prov("source", une.resume.source, une.lien) }}</p>
+    </div>
+
+    <div class="grille" style="margin-top: 12px">
+      <p class="col-4 resume">{{ une.resume.texte }}</p>
+      <div class="col-2">
+        <span class="pastille niv-{{ une.niveau }}">{{ une.score|virgule }} · {{ libelle_niveau(une.niveau) }}</span>
+        {% if une.exploitee %}<span class="exploitee">Exploitée</span>{% endif %}
+      </div>
+    </div>
+
+    <div class="point-tete" style="margin-top: 12px"><span class="etiquette">Profil de la faille</span>{{ prov("calcule", "Vecteur CVSS") }}</div>
+    <div class="profil">
+      {% for case in une.profil %}
+      <div class="case niv-{{ case.niveau }}">
+        <div class="case-critere">{{ case.critere }}</div>
+        <div class="case-valeur">{{ case.valeur }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grille" style="margin-top: 14px">
+      <div class="col-4 comprendre">
+        <span class="etiquette">Comprendre</span>
+        {% for p in une.comprendre %}{{ point(p) }}{% endfor %}
+      </div>
+      <div class="col-2">
+        <span class="etiquette">Fiche d'identité</span>
+        <dl class="identite">
+          {% for libelle, valeur in une.fiche %}
+          <dt>{{ libelle }}</dt><dd>{{ valeur }}</dd>
+          {% endfor %}
+        </dl>
+        {{ lexique(numero.lexique) }}
+      </div>
+    </div>
+  </div>
+  {{ folio(numero, 3) }}
+</section>

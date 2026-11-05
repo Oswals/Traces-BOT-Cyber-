@@ -1,0 +1,48 @@
+{% from "_macros.html" import entete, folio, prov, libelle_niveau %}
+{% set bref = numero.bref %}
+<section class="page" id="sommaire">
+  {{ entete(numero, "", "Sommaire") }}
+  <div class="page-contenu">
+    <div class="code-rubrique">Le numéro en bref {{ prov("calcule") }}</div>
+    <div class="chiffres">
+      <div class="chiffre"><div class="chiffre-valeur">{{ bref.failles }}</div><div class="chiffre-libelle">failles suivies</div></div>
+      <div class="chiffre"><div class="chiffre-valeur">{{ bref.critiques }}</div><div class="chiffre-libelle">critiques</div></div>
+      <div class="chiffre"><div class="chiffre-valeur">{{ bref.exploitees }}</div><div class="chiffre-libelle">exploitées</div></div>
+      <div class="chiffre"><div class="chiffre-valeur">{{ bref.sources }}</div><div class="chiffre-libelle">sources consultées</div></div>
+    </div>
+    <p class="discret">{{ bref.articles }} articles lus ce matin, regroupés par faille (CVE) puis complétés par la NVD et le catalogue CISA des failles exploitées.</p>
+
+    <h2 style="margin-top: 32px">Au sommaire</h2>
+    <ol class="sommaire">
+      <li><span class="code-rubrique">[01]</span><a class="titre" href="#une">À la une · {{ numero.une.produit }}</a><span class="num">03</span></li>
+      <li><span class="code-rubrique">[02]</span><a class="titre" href="#failles">Failles exploitées</a><span class="num">04</span></li>
+      <li><span class="code-rubrique">[03]</span><a class="titre" href="#radar">Radar · brèves et arnaque du moment</a><span class="num">05</span></li>
+      <li><span class="code-rubrique">[04]</span><a class="titre" href="#histoire">L'histoire · {{ numero.histoire.titre }}</a><span class="num">06</span></li>
+    </ol>
+
+    <div class="grille" style="margin-top: 32px">
+      <div class="col-3">
+        <h3>Mode d'emploi : d'où vient le texte ?</h3>
+        <p class="discret">Chaque bloc porte une marque de provenance.</p>
+        <ul class="legende">
+          <li><span>{{ prov("source") }}</span><span>Extrait d'une source officielle ou de presse, lien à l'appui.</span></li>
+          <li><span>{{ prov("calcule") }}</span><span>Déduit des données (score, vecteur CVSS, chiffres).</span></li>
+          <li><span>{{ prov("bibliotheque") }}</span><span>Rédigé à l'avance et vérifié, sources à l'appui.</span></li>
+          <li><span>{{ prov("ia_locale") }}</span><span>Rédigé par une IA locale à partir du texte source (plus tard).</span></li>
+        </ul>
+      </div>
+      <div class="col-3">
+        <h3>Niveau de menace</h3>
+        <p class="discret">Score CVSS de 0 à 10, calculé par la NVD.</p>
+        <div class="echelle">
+          <div class="niv-faible">Faible<br>0,1–3,9</div>
+          <div class="niv-moyenne">Moyenne<br>4–6,9</div>
+          <div class="niv-haute">Haute<br>7–8,9</div>
+          <div class="niv-critique">Critique<br>9–10</div>
+        </div>
+        <p style="margin-top: 16px"><span class="exploitee">Exploitée</span> <span class="discret">La faille est dans le catalogue CISA des failles activement exploitées : des attaques réelles ont été observées.</span></p>
+      </div>
+    </div>
+  </div>
+  {{ folio(numero, 2) }}
+</section>

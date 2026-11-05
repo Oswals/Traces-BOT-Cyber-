@@ -1,0 +1,56 @@
+{# Éléments récurrents de TRACES. Une macro est une petite fonction de gabarit
+   qu'on appelle comme {{ prov("source", "CERT-FR") }}. #}
+
+{# Marque de provenance : d'où vient le texte du bloc #}
+{% macro prov(type, source="", lien="") -%}
+{% set libelles = {"source": "Source", "calcule": "Calculé", "bibliotheque": "Bibliothèque", "ia_locale": "IA locale"} %}
+<span class="prov-groupe"><span class="prov prov-{{ type }}">{{ libelles[type] }}</span>
+{%- if source %} <span class="prov-origine">{% if lien %}<a href="{{ lien }}">{{ source }}</a>{% else %}{{ source }}{% endif %}</span>{% endif %}</span>
+{%- endmacro %}
+
+{# Libellé d'un niveau de menace #}
+{% macro libelle_niveau(niveau) -%}
+{{ {"faible": "Faible", "moyenne": "Moyenne", "haute": "Haute", "critique": "Critique"}[niveau] }}
+{%- endmacro %}
+
+{# En-tête de page : TRACES · N°xx · date, et rubrique #}
+{% macro entete(numero, code, rubrique) -%}
+<header class="entete">
+  <span>TRACES · N°{{ "%02d"|format(numero.numero) }} · {{ numero.date }}</span>
+  {% if numero.demo %}<span class="demo">Données fictives</span>{% endif %}
+  <span class="rubrique">{% if code %}[{{ code }}] {% endif %}{{ rubrique }}</span>
+</header>
+{%- endmacro %}
+
+{# Folio en pied de page #}
+{% macro folio(numero, page) -%}
+<footer class="folio">
+  <span>TRACES · N°{{ "%02d"|format(numero.numero) }}</span>
+  <span>{{ "%02d"|format(page) }}</span>
+</footer>
+{%- endmacro %}
+
+{# Un point « Comprendre » : question, provenance, texte #}
+{% macro point(p, classe_question="point-question") -%}
+<div class="point">
+  <div class="point-tete">
+    <span class="{{ classe_question }}">{{ p.question }}</span>
+    <span>{{ prov(p.provenance, p.source, p.get("lien", "")) }}</span>
+  </div>
+  <p{% if p.source.endswith("(EN)") %} class="en" lang="en"{% endif %}>{{ p.texte }}</p>
+</div>
+{%- endmacro %}
+
+{# Notes de lexique #}
+{% macro lexique(termes) -%}
+{% if termes %}
+<aside class="lexique">
+  <span class="etiquette">Lexique</span>
+  <dl>
+    {% for t in termes %}
+    <dt>{{ t.terme }}.</dt> <dd>{{ t.definition }}</dd>
+    {% endfor %}
+  </dl>
+</aside>
+{% endif %}
+{%- endmacro %}

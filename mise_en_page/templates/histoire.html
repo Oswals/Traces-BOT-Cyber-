@@ -1,0 +1,66 @@
+{% from "_macros.html" import entete, folio, prov, lexique %}
+{% set h = numero.histoire %}
+
+{# --- Page 6 : contexte, déroulement, faille + chronologie --- #}
+<section class="page" id="histoire">
+  {{ entete(numero, "04", "L'histoire") }}
+  <div class="page-contenu">
+    <div class="histoire-titre">
+      <div class="point-tete">
+        <div class="histoire-annee">{{ h.annee }}</div>
+        {{ prov("bibliotheque", "Épisode vérifié") }}
+      </div>
+      <h1>{{ h.titre }}</h1>
+      <p class="chapeau">{{ h.chapeau }}</p>
+    </div>
+
+    <div class="grille" style="margin-top: 28px">
+      <div class="col-4">
+        {% for s in h.sections_p1 %}
+        <div class="section-histoire"><h3>{{ s.titre }}</h3><p>{{ s.texte }}</p></div>
+        {% endfor %}
+      </div>
+      <aside class="col-2">
+        <span class="etiquette">Chronologie</span>
+        <ol class="chronologie" style="margin-top: 8px">
+          {% for c in h.chronologie %}
+          <li><span class="date">{{ c.date }}</span>{{ c.evenement }}</li>
+          {% endfor %}
+        </ol>
+      </aside>
+    </div>
+  </div>
+  {{ folio(numero, 6) }}
+</section>
+
+{# --- Page 7 : schéma, victimes, conséquences, enseignements --- #}
+<section class="page" id="histoire-suite">
+  {{ entete(numero, "04", "L'histoire · suite") }}
+  <div class="page-contenu">
+    <span class="etiquette">Schéma de l'attaque</span>
+    <div class="schema">
+      {% for e in h.schema %}
+      <div class="schema-etape"><div class="mono discret">{{ "%02d"|format(loop.index) }}</div><div class="titre">{{ e.etape }}</div><div>{{ e.detail }}</div></div>
+      {% if not loop.last %}<div class="schema-fleche" aria-hidden="true">→</div>{% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="grille" style="margin-top: 24px">
+      <div class="col-4">
+        {% for s in h.sections_p2 %}
+        <div class="section-histoire"><h3>{{ s.titre }}</h3><p>{{ s.texte }}</p></div>
+        {% endfor %}
+      </div>
+      <div class="col-2">
+        {{ lexique(h.lexique) }}
+        <div class="lexique" style="margin-top: 16px">
+          <span class="etiquette">Sources</span>
+          <ol class="sources-liste">
+            {% for s in h.sources %}<li><a href="{{ s.lien }}">{{ s.titre }}</a></li>{% endfor %}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ folio(numero, 7) }}
+</section>
