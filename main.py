@@ -1,23 +1,26 @@
 """
 TRACES : lance le pipeline complet.
 
-Étape 3 : collecte les articles, les regroupe par CVE, les enrichit (NVD, KEV)
-et affiche un résumé. Les étapes suivantes (sélection, mise en page...) s'ajouteront ici.
+Collecte -> enrichissement (CVE, NVD, KEV) -> sélection -> assemblage -> HTML.
 
 Utilisation :
-    python main.py           -> résumé de la collecte
-    python main.py --demo    -> numéro de démonstration (données fictives, sans Internet)
-    python main.py --debug   -> messages détaillés pour déboguer
+    python main.py            -> numéro du jour dans sortie/traces_AAAA-MM-JJ.html
+    python main.py --details  -> affiche aussi le résumé de la collecte et des failles
+    python main.py --demo     -> numéro de démonstration (données fictives, sans Internet)
+    python main.py --debug    -> messages détaillés pour déboguer
 """
 
 import argparse
 import logging
+import sys
 from collections import defaultdict
+from datetime import date
 
 import config
 from collecteurs import collecter_tout
 from enrichissement import enrichir
-from mise_en_page import generer_html
+from mise_en_page import assembler, generer_html, numero_du_jour
+from selection import selectionner
 
 EXEMPLES_PAR_SOURCE = 3  # nombre de titres affichés par source
 FAILLES_AFFICHEES = 10   # nombre de failles affichées dans le résumé
@@ -74,6 +77,7 @@ def afficher_failles(failles: list) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="TRACES, magazine de veille cyber")
     parser.add_argument("--demo", action="store_true", help="numéro de démonstration (données fictives)")
+    parser.add_argument("--details", action="store_true", help="affiche le résumé de la collecte")
     parser.add_argument("--debug", action="store_true", help="logs détaillés")
     args = parser.parse_args()
 
@@ -88,9 +92,22 @@ def main() -> None:
         return
 
     articles = collecter_tout()
-    afficher_resume(articles)
     failles = enrichir(articles)
-    afficher_failles(failles)
+    if args.details:
+        afficher_resume(articles)
+        afficher_failles(failles)
+
+    try:
+        selection = selectionner(articles, failles)
+    except ValueError as erreur:
+        logging.error("%s", erreur)
+        sys.exit(1)
+
+    aujourd_hui = date.today()
+    numero = assembler(selection, articles, failles, numero_du_jour(aujourd_hui), aujourd_hui)
+    chemin = generer_html(numero, config.DOSSIER_SORTIE / f"traces_{aujourd_hui.isoformat()}.html")
+    print(f"\nTRACES N°{numero['numero']:02d} généré : {chemin}")
+    print(f"À la une : {numero['une']['titre']}")
 
 
 if __name__ == "__main__":

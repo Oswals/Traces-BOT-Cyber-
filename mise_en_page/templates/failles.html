@@ -2,13 +2,18 @@
 <section class="page" id="failles">
   {{ entete(numero, "02", "Failles exploitées") }}
   <div class="page-contenu">
-    <h2>Trois failles déjà utilisées par des attaquants</h2>
+    {% set nb = numero.failles|length %}
+    {% if nb == 0 %}
+    <h2>Aucune autre faille exploitée signalée aujourd'hui</h2>
+    {% else %}
+    <h2>{{ {1: "Une faille déjà utilisée", 2: "Deux failles déjà utilisées", 3: "Trois failles déjà utilisées"}.get(nb, "%d failles déjà utilisées"|format(nb)) }} par des attaquants</h2>
+    {% endif %}
     {% for f in numero.failles %}
     <article class="fiche-faille">
       <div class="fiche-faille-tete">
         <div>
           <h2>{{ f.titre }}</h2>
-          <span class="cve"><a href="{{ f.lien }}">{{ f.cve }}</a></span>
+          <span class="cve"><a href="{{ f.lien|lien }}">{{ f.cve }}</a></span>
           {% if f.exploitee %} <span class="exploitee">Exploitée</span>{% endif %}
           {% if f.en_anglais %} <span class="avis-anglais">· sans publication CERT-FR : texte CISA en anglais</span>{% endif %}
         </div>

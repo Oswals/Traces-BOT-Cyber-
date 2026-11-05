@@ -6,7 +6,7 @@
 {% macro breve(b) -%}
 <article class="breve">
   <div class="breve-meta"><span class="langue">{{ b.langue|upper }}</span>{{ prov("source", b.source, b.lien) }}</div>
-  <h3{% if b.langue != "fr" %} lang="{{ b.langue }}"{% endif %}><a href="{{ b.lien }}">{{ b.titre }}</a></h3>
+  <h3{% if b.langue != "fr" %} lang="{{ b.langue }}"{% endif %}><a href="{{ b.lien|lien }}">{{ b.titre }}</a></h3>
   <p{% if b.langue != "fr" %} lang="{{ b.langue }}"{% endif %}>{{ b.resume }}</p>
 </article>
 {%- endmacro %}
@@ -52,12 +52,15 @@
     </div>
 
     {% set arnaque = radar.arnaque %}
+    {% if arnaque.alerte %}
     <div class="arnaque" style="margin-top: 20px">
       <div class="point-tete">
         <h2 style="margin: 0">L'arnaque du moment</h2>
         {{ prov("source", arnaque.alerte.source, arnaque.alerte.lien) }}
       </div>
-      <p><a href="{{ arnaque.alerte.lien }}">{{ arnaque.alerte.titre }}</a></p>
+      <p><a href="{{ arnaque.alerte.lien|lien }}">{{ arnaque.alerte.titre }}</a></p>
+      {% if arnaque.alerte.get("resume") %}<p class="discret">{{ arnaque.alerte.resume }}</p>{% endif %}
+      {% if arnaque.fiche %}
       <div class="point-tete"><h3 style="margin: 0">{{ arnaque.fiche.nom }}</h3>{{ prov("bibliotheque", "Fiche Arnaques") }}</div>
       <div class="grille">
         <div class="col-4">
@@ -68,7 +71,11 @@
         </div>
         <div class="col-2 reflexe"><span class="etiquette">Le bon réflexe</span><p>{{ arnaque.fiche.reflexe }}</p></div>
       </div>
+      {% else %}
+      <p class="mono discret">Fiche Arnaques associée : bibliothèque en préparation.</p>
+      {% endif %}
     </div>
+    {% endif %}
   </div>
   {{ folio(numero, 5) }}
 </section>

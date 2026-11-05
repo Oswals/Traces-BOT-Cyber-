@@ -1,6 +1,21 @@
 {% from "_macros.html" import entete, folio, prov, lexique %}
 {% set h = numero.histoire %}
 
+{% if not h %}
+{# Bibliothèque Histoire encore vide (elle sera remplie à l'étape 7) : une seule page d'attente #}
+<section class="page" id="histoire">
+  {{ entete(numero, "04", "L'histoire") }}
+  <div class="page-contenu">
+    <div class="histoire-titre">
+      <div class="point-tete">{{ prov("bibliotheque", "Épisodes vérifiés") }}</div>
+      <h1>Épisodes en préparation</h1>
+      <p class="chapeau">Chaque numéro racontera un événement majeur des quinze dernières années, rédigé à l'avance et vérifié, sources à l'appui. Le premier épisode sera WannaCry (2017).</p>
+    </div>
+  </div>
+  {{ folio(numero, 6) }}
+</section>
+{% else %}
+
 {# --- Page 6 : contexte, déroulement, faille + chronologie --- #}
 <section class="page" id="histoire">
   {{ entete(numero, "04", "L'histoire") }}
@@ -56,7 +71,7 @@
         <div class="lexique" style="margin-top: 16px">
           <span class="etiquette">Sources</span>
           <ol class="sources-liste">
-            {% for s in h.sources %}<li><a href="{{ s.lien }}">{{ s.titre }}</a></li>{% endfor %}
+            {% for s in h.sources %}<li><a href="{{ s.lien|lien }}">{{ s.titre }}</a></li>{% endfor %}
           </ol>
         </div>
       </div>
@@ -64,3 +79,4 @@
   </div>
   {{ folio(numero, 7) }}
 </section>
+{% endif %}

@@ -23,11 +23,22 @@ _env = Environment(
 
 
 def _virgule(nombre) -> str:
-    """9.8 -> "9,8" (écriture française)."""
+    """9.8 -> "9,8" (écriture française) ; "–" si la faille n'a pas encore de score."""
+    if nombre is None:
+        return "–"
     return str(nombre).replace(".", ",")
 
 
+def _lien(url: str) -> str:
+    """Ne garde que les liens web. L'échappement ne suffit pas pour un lien : une adresse
+    « javascript:... » venue d'un flux piégé exécuterait du code au clic (règle n°7)."""
+    if url and url.strip().lower().startswith(("https://", "http://")):
+        return url.strip()
+    return "#"
+
+
 _env.filters["virgule"] = _virgule
+_env.filters["lien"] = _lien
 
 
 def generer_html(numero: dict, chemin: Path) -> Path:

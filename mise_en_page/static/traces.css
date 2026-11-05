@@ -172,6 +172,7 @@ h3 { font-size: 18px; margin-bottom: 6px; }
 .niv-moyenne  { background: var(--niv-moyenne);  color: var(--encre); }
 .niv-haute    { background: var(--niv-haute);    color: var(--papier); }
 .niv-critique { background: var(--niv-critique); color: var(--papier); }
+.niv-inconnu  { background: var(--papier); color: var(--graphite); outline: 1px dashed var(--filet); outline-offset: -1px; }
 
 .pastille {
   display: inline-block;

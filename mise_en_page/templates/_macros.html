@@ -5,12 +5,12 @@
 {% macro prov(type, source="", lien="") -%}
 {% set libelles = {"source": "Source", "calcule": "Calculé", "bibliotheque": "Bibliothèque", "ia_locale": "IA locale"} %}
 <span class="prov-groupe"><span class="prov prov-{{ type }}">{{ libelles[type] }}</span>
-{%- if source %} <span class="prov-origine">{% if lien %}<a href="{{ lien }}">{{ source }}</a>{% else %}{{ source }}{% endif %}</span>{% endif %}</span>
+{%- if source %} <span class="prov-origine">{% if lien %}<a href="{{ lien|lien }}">{{ source }}</a>{% else %}{{ source }}{% endif %}</span>{% endif %}</span>
 {%- endmacro %}
 
 {# Libellé d'un niveau de menace #}
 {% macro libelle_niveau(niveau) -%}
-{{ {"faible": "Faible", "moyenne": "Moyenne", "haute": "Haute", "critique": "Critique"}[niveau] }}
+{{ {"faible": "Faible", "moyenne": "Moyenne", "haute": "Haute", "critique": "Critique", "inconnu": "Non évaluée"}[niveau] }}
 {%- endmacro %}
 
 {# En-tête de page : TRACES · N°xx · date, et rubrique #}

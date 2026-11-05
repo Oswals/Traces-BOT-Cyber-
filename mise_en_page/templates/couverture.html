@@ -40,11 +40,12 @@
       </li>
       <li>
         <div class="code-rubrique">[03] Radar</div>
-        <div class="titre">{{ numero.radar.arnaque.fiche.nom }}</div>
+        {% set arnaque = numero.radar.arnaque %}
+        <div class="titre">{% if arnaque.fiche %}{{ arnaque.fiche.nom }}{% elif arnaque.alerte %}L'arnaque du moment{% else %}Brèves Monde et France{% endif %}</div>
       </li>
       <li>
         <div class="code-rubrique">[04] Histoire</div>
-        <div class="titre">{{ numero.histoire.titre }} ({{ numero.histoire.annee }})</div>
+        <div class="titre">{% if numero.histoire %}{{ numero.histoire.titre }} ({{ numero.histoire.annee }}){% else %}Épisodes en préparation{% endif %}</div>
       </li>
     </ol>
   </div>

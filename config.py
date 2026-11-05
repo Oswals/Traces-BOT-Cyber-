@@ -63,3 +63,10 @@ PRESSE = [
                    "rançongiciel", "malware", "logiciel malveillant", "phishing", "hameçonnage",
                    "piratage", "pirate", "fuite de données", "CVE", "menace", "SOC "]},
 ]
+
+# --- Sélection et numéro --------------------------------------------------------
+
+FENETRE_UNE_JOURS = 3       # la une et les failles exploitées sont choisies parmi les infos de moins de 3 jours
+NB_FAILLES_EXPLOITEES = 3   # fiches de la page « Failles exploitées »
+NB_BREVES = 3               # brèves par colonne (Monde, France)
+FICHIER_NUMERO = DOSSIER_DATA / "numero.json"  # dernier numéro publié (pour numéroter le suivant)

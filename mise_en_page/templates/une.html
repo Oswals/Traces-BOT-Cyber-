@@ -9,7 +9,7 @@
     </div>
 
     <div class="grille" style="margin-top: 12px">
-      <p class="col-4 resume">{{ une.resume.texte }}</p>
+      <p class="col-4 resume{% if une.resume.get('langue', 'fr') != 'fr' %} en" lang="{{ une.resume.langue }}{% endif %}">{{ une.resume.texte }}</p>
       <div class="col-2">
         <span class="pastille niv-{{ une.niveau }}">{{ une.score|virgule }} · {{ libelle_niveau(une.niveau) }}</span>
         {% if une.exploitee %}<span class="exploitee">Exploitée</span>{% endif %}
@@ -17,6 +17,7 @@
     </div>
 
     <div class="point-tete" style="margin-top: 12px"><span class="etiquette">Profil de la faille</span>{{ prov("calcule", "Vecteur CVSS") }}</div>
+    {% if une.profil %}
     <div class="profil">
       {% for case in une.profil %}
       <div class="case niv-{{ case.niveau }}">
@@ -25,6 +26,10 @@
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    {# En attendant la traduction du vecteur (étape 6), on affiche le vecteur brut #}
+    <p class="mono discret">{{ une.get("vecteur") or "Vecteur CVSS non publié par la NVD." }}</p>
+    {% endif %}
 
     <div class="grille" style="margin-top: 14px">
       <div class="col-4 comprendre">
