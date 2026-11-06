@@ -1,12 +1,13 @@
 {% from "_macros.html" import entete, folio, prov, lexique, libelle_niveau %}
 {% set h = numero.histoire %}
 
-{# Étiquettes en tête de page : catégorie, envergure, anniversaire #}
+{# Étiquettes en tête de page : catégorie, envergure, anniversaire, date (« survenu le » / « révélé le ») #}
 {% macro etiquettes(h) -%}
 <div class="histoire-tags">
   <span class="tag-categorie">{{ h.categorie }}</span>
   <span class="tag-envergure">{{ h.envergure }}</span>
   {% if h.anniversaire %}<span class="tag-anniversaire">{{ h.anniversaire }}</span>{% endif %}
+  <span class="histoire-date">{{ h.date }}</span>
 </div>
 {%- endmacro %}
 

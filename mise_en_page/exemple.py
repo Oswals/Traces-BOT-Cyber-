@@ -182,7 +182,7 @@ NUMERO = {
     # --- Pages 7 et 8 : l'histoire (le vrai épisode WannaCry, encore en relecture) ---
     "histoire": {
         "type": "complet", "titre": _EPISODE["titre"], "annee": _EPISODE["date"][:4],
-        "date": "12 mai 2017", "categorie": _EPISODE["categorie"], "envergure": "Grand événement",
+        "date": "Survenu le 12 mai 2017", "categorie": _EPISODE["categorie"], "envergure": "Grand événement",
         "anniversaire": "", "lien_source": "",
         **page_episode(_EPISODE, avec_cves=False),
     },

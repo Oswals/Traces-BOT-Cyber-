@@ -412,6 +412,7 @@ h3 { font-size: 18px; margin-bottom: 6px; }
 .tag-anniversaire { border: 1px solid var(--signal); color: var(--signal); }
 .decouverte-mention { font-family: var(--police-code); font-size: 12px; color: var(--signal); border-left: 3px solid var(--signal); padding: 2px 0 2px 8px; margin: 12px 0 0; }
 .intertitre { font-size: 12px; font-weight: 400; }
+.histoire-tags .histoire-date { text-transform: none; letter-spacing: 0; color: var(--graphite); padding: 3px 0 3px 4px; font-size: 13px; }
 
 /* Fiche technique : CVE et techniques ATT&CK */
 .cve-histoire { margin-top: 16px; padding-top: 8px; border-top: 1px solid var(--filet); }

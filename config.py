@@ -216,10 +216,14 @@ HISTOIRE_CATEGORIE_FORCEE = {
     "2017 Equifax data breach": "FUITE DE DONNÉES",                       # pas de nature sur Wikidata
     "2024 CrowdStrike-related IT outages": "PANNE",                       # un bogue, mais une panne mondiale
 }
-# Dates saisies à la main quand Wikidata n'en donne pas (date de révélation publique)
+# Type de date d'un événement : « attaque » (date des faits, affichée « survenu le … ») ou
+# « revelation » (date où il a été rendu public, affichée « révélé le … »)
+HISTOIRE_TYPES_DATE = ["attaque", "revelation"]
+# Dates saisies à la main quand Wikidata n'en donne pas (confirmées le 2026-11-06)
 HISTOIRE_DATES_MANUELLES = {
-    "2017 Equifax data breach": "2017-09-07",                            # annonce par Equifax
-    "2020 United States federal government data breach": "2020-12-13",   # révélation de SUNBURST (SolarWinds)
+    "2017 Equifax data breach": {"date": "2017-09-07", "type_date": "revelation"},  # annonce par Equifax
+    "2020 United States federal government data breach":
+        {"date": "2020-12-13", "type_date": "revelation"},                           # révélation de SUNBURST
 }
 
 # Catalogue des candidats (gardé dans Git : le magazine marche même si les sources sont injoignables)

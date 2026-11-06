@@ -88,7 +88,8 @@ def _candidat_wikipedia(qid: str, info: dict, categories_sources: list[str], auj
     """Un candidat, ou None s'il ne passe pas les filtres (date, nature, exclusions)."""
     titre_ref = info["titre_en"] or info["titre_fr"]
     if titre_ref in config.HISTOIRE_DATES_MANUELLES:
-        info = {**info, "date": config.HISTOIRE_DATES_MANUELLES[titre_ref], "precision": 11}
+        manuelle = config.HISTOIRE_DATES_MANUELLES[titre_ref]
+        info = {**info, "date": manuelle["date"], "precision": 11, "type_date": manuelle["type_date"]}
     if not titre_ref or titre_ref in config.HISTOIRE_EXCLURE or not info["date"]:
         return None
     if not config.HISTOIRE_ANNEE_MIN <= int(info["date"][:4]) or info["date"] > aujourd_hui.isoformat():
@@ -114,6 +115,7 @@ def _candidat_wikipedia(qid: str, info: dict, categories_sources: list[str], auj
         "titre_fr": info["titre_fr"],
         "date": info["date"],
         "precision_date": PRECISIONS.get(info["precision"], "année"),
+        "type_date": info.get("type_date") or "attaque",
         "categorie": categorie,
         "envergure": None,  # calculée après la mesure des vues
         "source": "Wikipédia",
@@ -155,6 +157,7 @@ def candidats_attack() -> list[dict]:
         resultat.append({
             "id": f"attack-{c['id']}", "titre": c["titre"], "titre_en": c["titre"], "titre_fr": None,
             "date": c["date"], "precision_date": "mois",  # ATT&CK ne date qu'au mois près
+            "type_date": "attaque",                       # première activité observée
             "categorie": "CYBERATTAQUE", "envergure": "moyen", "source": "MITRE ATT&CK",
             "langue": "en", "lien": c["lien"], "lien_en": c["lien"], "licence": "",
             "langues": None, "vues": None, "cves": [], "techniques": c["techniques"],
@@ -181,6 +184,7 @@ def candidats_kev(aujourd_hui: date) -> list[dict]:
         resultat.append({
             "id": f"kev-{f['cve']}", "titre": f["titre"], "titre_en": f["titre"], "titre_fr": None,
             "date": fiche.publiee, "precision_date": "jour",  # date de publication de la CVE
+            "type_date": "revelation",                        # = divulgation de la faille
             "categorie": "CYBERATTAQUE", "envergure": "moyen", "source": "CISA KEV",
             "langue": "en", "lien": kev_ancien.LIEN_CATALOGUE + f["cve"], "lien_en": "",
             "licence": "", "langues": None, "vues": None, "cves": [f["cve"]], "techniques": [],

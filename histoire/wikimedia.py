@@ -26,6 +26,8 @@ VUES_API = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article"
 # Propriétés Wikidata qui donnent la date d'un événement, par ordre de préférence
 # (P585 = date, P580 = date de début, P575 = date de découverte, P577 = date de publication)
 PROPRIETES_DATE = ["P585", "P580", "P575", "P577"]
+# P585 et P580 datent les faits ; P575 (découverte) et P577 (publication) datent la révélation
+PROPRIETES_REVELATION = {"P575", "P577"}
 PROPRIETE_NATURE = "P31"   # « nature de l'élément » : cyberattaque, fuite de données, film...
 PROPRIETE_CVE = "P3587"    # identifiant CVE
 # Sites Wikimedia qui ne sont pas des Wikipédia de langue (ne comptent pas dans les langues)
@@ -124,17 +126,19 @@ def membres_categorie(langue: str, titre: str, profondeur: int = 0) -> dict[str,
     return resultat
 
 
-def _date_wikidata(claims: dict) -> tuple[str, int] | None:
-    """(date AAAA-MM-JJ, précision) de l'événement, ou None.
+def _date_wikidata(claims: dict) -> tuple[str, int, str] | None:
+    """(date AAAA-MM-JJ, précision, type de date) de l'événement, ou None.
 
     Précision Wikidata : 11 = au jour près, 10 = au mois, 9 = à l'année.
+    Type de date : « attaque » (date des faits) ou « revelation » (découverte, publication).
     """
     for propriete in PROPRIETES_DATE:
         for claim in claims.get(propriete, []):
             valeur = claim.get("mainsnak", {}).get("datavalue", {}).get("value", {})
             temps = valeur.get("time", "")  # ex. "+2017-05-12T00:00:00Z"
             if temps.startswith("+") and len(temps) >= 11:
-                return temps[1:11].replace("-00", "-01"), valeur.get("precision", 9)
+                type_date = "revelation" if propriete in PROPRIETES_REVELATION else "attaque"
+                return temps[1:11].replace("-00", "-01"), valeur.get("precision", 9), type_date
     return None
 
 
@@ -156,6 +160,7 @@ def entites(qids: list[str]) -> dict[str, dict]:
                 infos[qid] = {
                     "date": date_ev[0] if date_ev else None,
                     "precision": date_ev[1] if date_ev else None,
+                    "type_date": date_ev[2] if date_ev else None,
                     "langues": sum(1 for s in liens if s.endswith("wiki") and s not in SITES_NON_LANGUES),
                     "titre_en": liens.get("enwiki", {}).get("title"),
                     "titre_fr": liens.get("frwiki", {}).get("title"),

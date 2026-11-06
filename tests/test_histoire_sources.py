@@ -27,11 +27,16 @@ class TestWikimedia(unittest.TestCase):
     def test_date_preferee_et_precision(self):
         # P585 (date) passe avant P580 (début)
         claims = {"P580": claim("+2016-01-01T00:00:00Z"), "P585": claim("+2017-05-12T00:00:00Z")}
-        self.assertEqual(wikimedia._date_wikidata(claims), ("2017-05-12", 11))
+        self.assertEqual(wikimedia._date_wikidata(claims), ("2017-05-12", 11, "attaque"))
 
     def test_date_a_l_annee(self):
         self.assertEqual(wikimedia._date_wikidata({"P580": claim("+2014-00-00T00:00:00Z", 9)}),
-                         ("2014-01-01", 9))
+                         ("2014-01-01", 9, "attaque"))
+
+    def test_date_de_revelation(self):
+        # P575 = date de découverte : c'est une révélation, pas la date des faits
+        self.assertEqual(wikimedia._date_wikidata({"P575": claim("+2014-04-07T00:00:00Z")}),
+                         ("2014-04-07", 11, "revelation"))
 
     def test_sans_date(self):
         self.assertIsNone(wikimedia._date_wikidata({"P571": claim("+2005-01-01T00:00:00Z")}))

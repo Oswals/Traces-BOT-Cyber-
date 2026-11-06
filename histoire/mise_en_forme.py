@@ -39,6 +39,13 @@ DEFAUTS = {"double": False, "verifie": False, "langue": "fr", "texte_indisponibl
            "techniques_reste": 0, "attribution": "", "licence": ""}
 
 
+def phrase_date(c: dict) -> str:
+    """« Survenu le 12 mai 2017 », « Révélé le 7 septembre 2017 », « Survenu en mai 2017 »..."""
+    verbe = "Révélé" if c.get("type_date") == "revelation" else "Survenu"
+    texte = date_affichee(c["date"], c.get("precision_date", "année"))
+    return f"{verbe} {'le' if c.get('precision_date') == 'jour' else 'en'} {texte}"
+
+
 def date_affichee(date_iso: str, precision: str) -> str:
     annee, mois = int(date_iso[:4]), int(date_iso[5:7])
     if precision == "jour":
@@ -56,7 +63,7 @@ def preparer(choix: dict | None, jour: date) -> dict | None:
         "type": choix["type"],
         "titre": c["titre"],
         "annee": c["date"][:4],
-        "date": date_affichee(c["date"], c.get("precision_date", "année")),
+        "date": phrase_date(c),
         "categorie": c["categorie"],
         "envergure": ENVERGURES.get(c.get("envergure"), ""),
         "anniversaire": (f"Il y a {jour.year - int(c['date'][:4])} ans, jour pour jour"
@@ -102,8 +109,7 @@ def _decouverte(c: dict) -> dict:
     sources = [{"titre": f"Wikipédia ({langue.upper()}), « {c['titre']} », CC BY-SA 4.0", "lien": c["lien"]}]
     if c.get("lien_en") and c["lien_en"] != c["lien"]:
         sources.append({"titre": f"Wikipédia (EN), « {c['titre_en']} »", "lien": c["lien_en"]})
-    reperes = [("Date", date_affichee(c["date"], c.get("precision_date", "année"))),
-               ("Catégorie", c["categorie"].capitalize())]
+    reperes = [("Catégorie", c["categorie"].capitalize())]
     if c.get("langues"):
         reperes.append(("Notoriété", f"article présent dans {c['langues']} langues"))
     if c.get("cves"):
@@ -138,8 +144,7 @@ def _technique(c: dict) -> dict:
         "techniques": techniques[:NB_TECHNIQUES],
         "techniques_reste": max(0, len(techniques) - NB_TECHNIQUES),
         "attribution": ATTRIBUTION_ATTACK if source == "MITRE ATT&CK" else "",
-        "reperes": [("Date", date_affichee(c["date"], c.get("precision_date", "année"))),
-                    ("Catégorie", c["categorie"].capitalize()), ("Source", source)],
+        "reperes": [("Catégorie", c["categorie"].capitalize()), ("Source", source)],
         "sources": [{"titre": f"{source} · {c['titre']}", "lien": c.get("lien", "")}],
     }
 

@@ -7,7 +7,7 @@ from datetime import date
 import config
 from histoire import brouillon_ia, extraits
 from histoire.choix import charger_episodes
-from histoire.mise_en_forme import date_affichee, page_episode, preparer
+from histoire.mise_en_forme import date_affichee, page_episode, phrase_date, preparer
 from mise_en_page import generer_html
 from mise_en_page.exemple import NUMERO
 
@@ -55,6 +55,14 @@ class TestPreparer(unittest.TestCase):
         self.assertEqual(date_affichee("2017-05-12", "jour"), "12 mai 2017")
         self.assertEqual(date_affichee("2019-09-01", "mois"), "septembre 2019")
         self.assertEqual(date_affichee("2014-01-01", "année"), "2014")
+
+    def test_phrase_date(self):
+        self.assertEqual(phrase_date({"date": "2017-09-07", "precision_date": "jour", "type_date": "revelation"}),
+                         "Révélé le 7 septembre 2017")
+        self.assertEqual(phrase_date({"date": "2017-05-12", "precision_date": "jour", "type_date": "attaque"}),
+                         "Survenu le 12 mai 2017")
+        self.assertEqual(phrase_date({"date": "2019-09-01", "precision_date": "mois", "type_date": "attaque"}),
+                         "Survenu en septembre 2019")
 
     def test_fiche_technique_attack(self):
         h = preparer({"candidat": ATTACK, "type": "technique", "anniversaire": False}, date(2026, 11, 10))

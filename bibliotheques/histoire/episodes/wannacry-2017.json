@@ -4,6 +4,7 @@
   "titre_en": "WannaCry ransomware attack",
   "date": "2017-05-12",
   "precision_date": "jour",
+  "type_date": "attaque",
   "categorie": "CYBERATTAQUE",
   "envergure": "grand",
   "verifie": true,
