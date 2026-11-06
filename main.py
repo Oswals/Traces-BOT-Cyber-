@@ -8,6 +8,7 @@ Utilisation :
     python main.py --details  -> affiche aussi le résumé de la collecte et des failles
     python main.py --demo     -> numéro de démonstration (données fictives, sans Internet)
     python main.py --debug    -> messages détaillés pour déboguer
+    python main.py --planning 7 -> rubrique Histoire des 7 prochains jours (n'écrit rien)
 """
 
 import argparse
@@ -22,6 +23,7 @@ from enrichissement import enrichir
 from mise_en_page import assembler, generer_html, numero_du_jour
 from selection import selectionner
 
+JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 EXEMPLES_PAR_SOURCE = 3  # nombre de titres affichés par source
 FAILLES_AFFICHEES = 10   # nombre de failles affichées dans le résumé
 
@@ -74,17 +76,40 @@ def afficher_failles(failles: list) -> None:
         print(f"      Sources : {', '.join(faille.sources)}")
 
 
+def afficher_planning(nb_jours: int) -> None:
+    """Événements Histoire prévus, sans rien enregistrer dans publies.json."""
+    from histoire.choix import planning
+
+    print(f"\n=== L'histoire : les {nb_jours} prochains jours ===\n")
+    for jour, choix in planning(date.today(), nb_jours):
+        entete = f"{JOURS[jour.weekday()]:9} {jour:%d/%m}"
+        if not choix:
+            print(f"{entete}  aucun candidat (lance python -m histoire.catalogue)")
+            continue
+        c = choix["candidat"]
+        print(f"{entete}  {c['envergure']:5} {choix['type']:10} {c['categorie']:16} {c['titre'][:55]}")
+        details = f"{c['date']} · {c.get('source', 'Bibliothèque')}"
+        if choix["anniversaire"]:
+            details += f" · Il y a {jour.year - int(c['date'][:4])} ans, jour pour jour"
+        print(f"{'':16}  {details}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="TRACES, magazine de veille cyber")
     parser.add_argument("--demo", action="store_true", help="numéro de démonstration (données fictives)")
     parser.add_argument("--details", action="store_true", help="affiche le résumé de la collecte")
     parser.add_argument("--debug", action="store_true", help="logs détaillés")
+    parser.add_argument("--planning", type=int, metavar="N", help="rubrique Histoire des N prochains jours")
     args = parser.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")  # accents corrects dans la console Windows
 
     logging.basicConfig(level=logging.DEBUG if args.debug else logging.INFO,
                         format="%(levelname)s: %(message)s")
 
     preparer_dossiers()
+    if args.planning:
+        afficher_planning(args.planning)
+        return
     if args.demo:
         from mise_en_page.exemple import NUMERO
         chemin = generer_html(NUMERO, config.DOSSIER_SORTIE / "traces_demo.html")

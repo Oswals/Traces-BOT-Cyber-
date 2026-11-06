@@ -190,6 +190,7 @@ HISTOIRE_FORCER_GRAND = [
 HISTOIRE_FORCER_MOYEN: list[str] = []
 HISTOIRE_EXCLURE = [
     "Year 2038 problem",                   # pas un événement daté
+    "WannaCry",                            # page du logiciel ; on garde celle de l'attaque
     "2026 Internet blackout in Iran",      # coupures décidées par un gouvernement :
     "2024 Bangladesh internet blackouts",  # pas de cause technique
 ]
@@ -198,6 +199,13 @@ HISTOIRE_CATEGORIE_FORCEE = {
     "Colonial Pipeline ransomware attack": "CYBERATTAQUE",
     "2017 Ukraine ransomware attacks": "CYBERATTAQUE",                    # NotPetya
     "WannaCry ransomware attack": "CYBERATTAQUE",
+    "2017 Equifax data breach": "FUITE DE DONNÉES",                       # pas de nature sur Wikidata
+    "2024 CrowdStrike-related IT outages": "PANNE",                       # un bogue, mais une panne mondiale
+}
+# Dates saisies à la main quand Wikidata n'en donne pas (date de révélation publique)
+HISTOIRE_DATES_MANUELLES = {
+    "2017 Equifax data breach": "2017-09-07",                            # annonce par Equifax
+    "2020 United States federal government data breach": "2020-12-13",   # révélation de SUNBURST (SolarWinds)
 }
 
 # Catalogue des candidats (gardé dans Git : le magazine marche même si les sources sont injoignables)
@@ -214,3 +222,8 @@ ATTACK_CACHE_JOURS = 7
 KEV_AGE_MIN_ANS = 2
 KEV_SCORE_MIN = 9.0
 KEV_MAX_CANDIDATS = 100
+
+# Rythme de la semaine : jours des grands événements (0 = lundi ... 6 = dimanche)
+HISTOIRE_JOURS_GRANDS = [0, 3]   # lundi et jeudi ; les autres jours : événement moyen
+DOSSIER_EPISODES = DOSSIER_BIBLIOTHEQUES / "histoire" / "episodes"   # épisodes complets rédigés
+FICHIER_PUBLIES = DOSSIER_BIBLIOTHEQUES / "publies.json"             # mémoire (gardée dans Git)

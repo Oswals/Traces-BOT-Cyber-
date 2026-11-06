@@ -87,6 +87,8 @@ def candidats_wikipedia(aujourd_hui: date) -> tuple[list[dict], list[dict]]:
 def _candidat_wikipedia(qid: str, info: dict, categories_sources: list[str], aujourd_hui: date) -> dict | None:
     """Un candidat, ou None s'il ne passe pas les filtres (date, nature, exclusions)."""
     titre_ref = info["titre_en"] or info["titre_fr"]
+    if titre_ref in config.HISTOIRE_DATES_MANUELLES:
+        info = {**info, "date": config.HISTOIRE_DATES_MANUELLES[titre_ref], "precision": 11}
     if not titre_ref or titre_ref in config.HISTOIRE_EXCLURE or not info["date"]:
         return None
     if not config.HISTOIRE_ANNEE_MIN <= int(info["date"][:4]) or info["date"] > aujourd_hui.isoformat():
