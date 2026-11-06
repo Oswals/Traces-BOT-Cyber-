@@ -20,7 +20,7 @@
    "categorie": "CYBERATTAQUE",
    "existe": true,
    "articles": 212,
-   "retenus": 44
+   "retenus": 43
   },
   {
    "source": "en:Category:Ransomware",
@@ -34,14 +34,14 @@
    "categorie": "FUITE DE DONNÉES",
    "existe": true,
    "articles": 508,
-   "retenus": 22
+   "retenus": 18
   },
   {
    "source": "en:Category:Data breaches",
    "categorie": "FUITE DE DONNÉES",
    "existe": true,
    "articles": 161,
-   "retenus": 28
+   "retenus": 20
   },
   {
    "source": "en:List of software bugs",
@@ -519,26 +519,6 @@
    "resume": ""
   },
   {
-   "id": "wd-Q276441",
-   "titre": "Révélations de télégrammes de la diplomatie américaine par WikiLeaks",
-   "titre_en": "United States diplomatic cables leak",
-   "titre_fr": "Révélations de télégrammes de la diplomatie américaine par WikiLeaks",
-   "date": "2010-11-28",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "grand",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/R%C3%A9v%C3%A9lations_de_t%C3%A9l%C3%A9grammes_de_la_diplomatie_am%C3%A9ricaine_par_WikiLeaks",
-   "lien_en": "https://en.wikipedia.org/wiki/United_States_diplomatic_cables_leak",
-   "licence": "CC BY-SA 4.0",
-   "langues": 29,
-   "vues": null,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
-  },
-  {
    "id": "wd-Q2573988",
    "titre": "Piratage du PlayStation Network",
    "titre_en": "2011 PlayStation Network outage",
@@ -725,26 +705,6 @@
    "cves": [
     "CVE-2012-4929"
    ],
-   "techniques": [],
-   "resume": ""
-  },
-  {
-   "id": "wd-Q13644106",
-   "titre": "Révélations d'Edward Snowden",
-   "titre_en": "Snowden disclosures",
-   "titre_fr": "Révélations d'Edward Snowden",
-   "date": "2013-01-01",
-   "precision_date": "année",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "grand",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/R%C3%A9v%C3%A9lations_d%27Edward_Snowden",
-   "lien_en": "https://en.wikipedia.org/wiki/Snowden_disclosures",
-   "licence": "CC BY-SA 4.0",
-   "langues": 21,
-   "vues": null,
-   "cves": [],
    "techniques": [],
    "resume": ""
   },
@@ -1798,26 +1758,6 @@
    "resume": "2016 Ukraine Electric Power Attack was a Sandworm Team campaign during which they used Industroyer malware to target and disrupt distribution substations within the Ukrainian power grid. This campaign was the second major public attack conducted against Ukraine by Sandworm Team."
   },
   {
-   "id": "wd-Q25066563",
-   "titre": "Football Leaks",
-   "titre_en": "Football Leaks",
-   "titre_fr": "Football Leaks",
-   "date": "2016-12-02",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "moyen",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Football_Leaks",
-   "lien_en": "https://en.wikipedia.org/wiki/Football_Leaks",
-   "licence": "CC BY-SA 4.0",
-   "langues": 12,
-   "vues": 56081,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
-  },
-  {
    "id": "wd-Q29971716",
    "titre": "DoublePulsar",
    "titre_en": "DoublePulsar",
@@ -2432,26 +2372,6 @@
    "cves": [
     "CVE-2017-15361"
    ],
-   "techniques": [],
-   "resume": ""
-  },
-  {
-   "id": "wd-Q42722842",
-   "titre": "Paradise Papers",
-   "titre_en": "Paradise Papers",
-   "titre_fr": "Paradise Papers",
-   "date": "2017-11-05",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "grand",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Paradise_Papers",
-   "lien_en": "https://en.wikipedia.org/wiki/Paradise_Papers",
-   "licence": "CC BY-SA 4.0",
-   "langues": 40,
-   "vues": null,
-   "cves": [],
    "techniques": [],
    "resume": ""
   },
@@ -3864,382 +3784,6 @@
    "vecteur": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
   },
   {
-   "id": "attack-C0024",
-   "titre": "SolarWinds Compromise",
-   "titre_en": "SolarWinds Compromise",
-   "titre_fr": null,
-   "date": "2019-08-01",
-   "precision_date": "mois",
-   "categorie": "CYBERATTAQUE",
-   "envergure": "moyen",
-   "source": "MITRE ATT&CK",
-   "langue": "en",
-   "lien": "https://attack.mitre.org/campaigns/C0024",
-   "lien_en": "https://attack.mitre.org/campaigns/C0024",
-   "licence": "",
-   "langues": null,
-   "vues": null,
-   "cves": [],
-   "techniques": [
-    {
-     "id": "T1003.006",
-     "nom": "DCSync",
-     "lien": "https://attack.mitre.org/techniques/T1003/006"
-    },
-    {
-     "id": "T1005",
-     "nom": "Data from Local System",
-     "lien": "https://attack.mitre.org/techniques/T1005"
-    },
-    {
-     "id": "T1016.001",
-     "nom": "Internet Connection Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1016/001"
-    },
-    {
-     "id": "T1018",
-     "nom": "Remote System Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1018"
-    },
-    {
-     "id": "T1021.001",
-     "nom": "Remote Desktop Protocol",
-     "lien": "https://attack.mitre.org/techniques/T1021/001"
-    },
-    {
-     "id": "T1021.002",
-     "nom": "SMB/Windows Admin Shares",
-     "lien": "https://attack.mitre.org/techniques/T1021/002"
-    },
-    {
-     "id": "T1021.006",
-     "nom": "Windows Remote Management",
-     "lien": "https://attack.mitre.org/techniques/T1021/006"
-    },
-    {
-     "id": "T1036.004",
-     "nom": "Masquerade Task or Service",
-     "lien": "https://attack.mitre.org/techniques/T1036/004"
-    },
-    {
-     "id": "T1036.005",
-     "nom": "Match Legitimate Resource Name or Location",
-     "lien": "https://attack.mitre.org/techniques/T1036/005"
-    },
-    {
-     "id": "T1047",
-     "nom": "Windows Management Instrumentation",
-     "lien": "https://attack.mitre.org/techniques/T1047"
-    },
-    {
-     "id": "T1048.002",
-     "nom": "Exfiltration Over Asymmetric Encrypted Non-C2 Protocol",
-     "lien": "https://attack.mitre.org/techniques/T1048/002"
-    },
-    {
-     "id": "T1053.005",
-     "nom": "Scheduled Task",
-     "lien": "https://attack.mitre.org/techniques/T1053/005"
-    },
-    {
-     "id": "T1057",
-     "nom": "Process Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1057"
-    },
-    {
-     "id": "T1059.001",
-     "nom": "PowerShell",
-     "lien": "https://attack.mitre.org/techniques/T1059/001"
-    },
-    {
-     "id": "T1059.003",
-     "nom": "Windows Command Shell",
-     "lien": "https://attack.mitre.org/techniques/T1059/003"
-    },
-    {
-     "id": "T1059.005",
-     "nom": "Visual Basic",
-     "lien": "https://attack.mitre.org/techniques/T1059/005"
-    },
-    {
-     "id": "T1069",
-     "nom": "Permission Groups Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1069"
-    },
-    {
-     "id": "T1069.002",
-     "nom": "Domain Groups",
-     "lien": "https://attack.mitre.org/techniques/T1069/002"
-    },
-    {
-     "id": "T1070",
-     "nom": "Indicator Removal",
-     "lien": "https://attack.mitre.org/techniques/T1070"
-    },
-    {
-     "id": "T1070.004",
-     "nom": "File Deletion",
-     "lien": "https://attack.mitre.org/techniques/T1070/004"
-    },
-    {
-     "id": "T1070.006",
-     "nom": "Timestomp",
-     "lien": "https://attack.mitre.org/techniques/T1070/006"
-    },
-    {
-     "id": "T1070.008",
-     "nom": "Clear Mailbox Data",
-     "lien": "https://attack.mitre.org/techniques/T1070/008"
-    },
-    {
-     "id": "T1071.001",
-     "nom": "Web Protocols",
-     "lien": "https://attack.mitre.org/techniques/T1071/001"
-    },
-    {
-     "id": "T1074.002",
-     "nom": "Remote Data Staging",
-     "lien": "https://attack.mitre.org/techniques/T1074/002"
-    },
-    {
-     "id": "T1078",
-     "nom": "Valid Accounts",
-     "lien": "https://attack.mitre.org/techniques/T1078"
-    },
-    {
-     "id": "T1078.002",
-     "nom": "Domain Accounts",
-     "lien": "https://attack.mitre.org/techniques/T1078/002"
-    },
-    {
-     "id": "T1078.003",
-     "nom": "Local Accounts",
-     "lien": "https://attack.mitre.org/techniques/T1078/003"
-    },
-    {
-     "id": "T1078.004",
-     "nom": "Cloud Accounts",
-     "lien": "https://attack.mitre.org/techniques/T1078/004"
-    },
-    {
-     "id": "T1083",
-     "nom": "File and Directory Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1083"
-    },
-    {
-     "id": "T1087",
-     "nom": "Account Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1087"
-    },
-    {
-     "id": "T1087.002",
-     "nom": "Domain Account",
-     "lien": "https://attack.mitre.org/techniques/T1087/002"
-    },
-    {
-     "id": "T1090.001",
-     "nom": "Internal Proxy",
-     "lien": "https://attack.mitre.org/techniques/T1090/001"
-    },
-    {
-     "id": "T1098.001",
-     "nom": "Additional Cloud Credentials",
-     "lien": "https://attack.mitre.org/techniques/T1098/001"
-    },
-    {
-     "id": "T1098.002",
-     "nom": "Additional Email Delegate Permissions",
-     "lien": "https://attack.mitre.org/techniques/T1098/002"
-    },
-    {
-     "id": "T1098.003",
-     "nom": "Additional Cloud Roles",
-     "lien": "https://attack.mitre.org/techniques/T1098/003"
-    },
-    {
-     "id": "T1098.005",
-     "nom": "Device Registration",
-     "lien": "https://attack.mitre.org/techniques/T1098/005"
-    },
-    {
-     "id": "T1105",
-     "nom": "Ingress Tool Transfer",
-     "lien": "https://attack.mitre.org/techniques/T1105"
-    },
-    {
-     "id": "T1114.002",
-     "nom": "Remote Email Collection",
-     "lien": "https://attack.mitre.org/techniques/T1114/002"
-    },
-    {
-     "id": "T1133",
-     "nom": "External Remote Services",
-     "lien": "https://attack.mitre.org/techniques/T1133"
-    },
-    {
-     "id": "T1140",
-     "nom": "Deobfuscate/Decode Files or Information",
-     "lien": "https://attack.mitre.org/techniques/T1140"
-    },
-    {
-     "id": "T1190",
-     "nom": "Exploit Public-Facing Application",
-     "lien": "https://attack.mitre.org/techniques/T1190"
-    },
-    {
-     "id": "T1195.002",
-     "nom": "Compromise Software Supply Chain",
-     "lien": "https://attack.mitre.org/techniques/T1195/002"
-    },
-    {
-     "id": "T1199",
-     "nom": "Trusted Relationship",
-     "lien": "https://attack.mitre.org/techniques/T1199"
-    },
-    {
-     "id": "T1213",
-     "nom": "Data from Information Repositories",
-     "lien": "https://attack.mitre.org/techniques/T1213"
-    },
-    {
-     "id": "T1213.003",
-     "nom": "Code Repositories",
-     "lien": "https://attack.mitre.org/techniques/T1213/003"
-    },
-    {
-     "id": "T1218.011",
-     "nom": "Rundll32",
-     "lien": "https://attack.mitre.org/techniques/T1218/011"
-    },
-    {
-     "id": "T1482",
-     "nom": "Domain Trust Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1482"
-    },
-    {
-     "id": "T1484.002",
-     "nom": "Trust Modification",
-     "lien": "https://attack.mitre.org/techniques/T1484/002"
-    },
-    {
-     "id": "T1539",
-     "nom": "Steal Web Session Cookie",
-     "lien": "https://attack.mitre.org/techniques/T1539"
-    },
-    {
-     "id": "T1546.003",
-     "nom": "Windows Management Instrumentation Event Subscription",
-     "lien": "https://attack.mitre.org/techniques/T1546/003"
-    },
-    {
-     "id": "T1550",
-     "nom": "Use Alternate Authentication Material",
-     "lien": "https://attack.mitre.org/techniques/T1550"
-    },
-    {
-     "id": "T1550.001",
-     "nom": "Application Access Token",
-     "lien": "https://attack.mitre.org/techniques/T1550/001"
-    },
-    {
-     "id": "T1550.004",
-     "nom": "Web Session Cookie",
-     "lien": "https://attack.mitre.org/techniques/T1550/004"
-    },
-    {
-     "id": "T1552.004",
-     "nom": "Private Keys",
-     "lien": "https://attack.mitre.org/techniques/T1552/004"
-    },
-    {
-     "id": "T1553.002",
-     "nom": "Code Signing",
-     "lien": "https://attack.mitre.org/techniques/T1553/002"
-    },
-    {
-     "id": "T1555",
-     "nom": "Credentials from Password Stores",
-     "lien": "https://attack.mitre.org/techniques/T1555"
-    },
-    {
-     "id": "T1555.003",
-     "nom": "Credentials from Web Browsers",
-     "lien": "https://attack.mitre.org/techniques/T1555/003"
-    },
-    {
-     "id": "T1558.003",
-     "nom": "Kerberoasting",
-     "lien": "https://attack.mitre.org/techniques/T1558/003"
-    },
-    {
-     "id": "T1560.001",
-     "nom": "Archive via Utility",
-     "lien": "https://attack.mitre.org/techniques/T1560/001"
-    },
-    {
-     "id": "T1568",
-     "nom": "Dynamic Resolution",
-     "lien": "https://attack.mitre.org/techniques/T1568"
-    },
-    {
-     "id": "T1583.001",
-     "nom": "Domains",
-     "lien": "https://attack.mitre.org/techniques/T1583/001"
-    },
-    {
-     "id": "T1584.001",
-     "nom": "Domains",
-     "lien": "https://attack.mitre.org/techniques/T1584/001"
-    },
-    {
-     "id": "T1587.001",
-     "nom": "Malware",
-     "lien": "https://attack.mitre.org/techniques/T1587/001"
-    },
-    {
-     "id": "T1589.001",
-     "nom": "Credentials",
-     "lien": "https://attack.mitre.org/techniques/T1589/001"
-    },
-    {
-     "id": "T1606.001",
-     "nom": "Web Cookies",
-     "lien": "https://attack.mitre.org/techniques/T1606/001"
-    },
-    {
-     "id": "T1606.002",
-     "nom": "SAML Tokens",
-     "lien": "https://attack.mitre.org/techniques/T1606/002"
-    },
-    {
-     "id": "T1665",
-     "nom": "Hide Infrastructure",
-     "lien": "https://attack.mitre.org/techniques/T1665"
-    },
-    {
-     "id": "T1680",
-     "nom": "Local Storage Discovery",
-     "lien": "https://attack.mitre.org/techniques/T1680"
-    },
-    {
-     "id": "T1685",
-     "nom": "Disable or Modify Tools",
-     "lien": "https://attack.mitre.org/techniques/T1685"
-    },
-    {
-     "id": "T1685.001",
-     "nom": "Disable or Modify Windows Event Log",
-     "lien": "https://attack.mitre.org/techniques/T1685/001"
-    },
-    {
-     "id": "T1686",
-     "nom": "Disable or Modify System Firewall",
-     "lien": "https://attack.mitre.org/techniques/T1686"
-    }
-   ],
-   "resume": "The SolarWinds Compromise was a sophisticated supply chain cyber operation conducted by APT29 that was discovered in mid-December 2020. APT29 used customized malware to inject malicious code into the SolarWinds Orion software build process that was later distributed through a normal software update; they also used password spraying, token theft, API abuse, spear phishing, and other supply chain attacks to compromise user accounts and leverage their associated access. Victims of this campaign included government, consulting, technology, telecom, and other organizations in North America, Europe, Asia, and the Middle East. This activity has been labled the StellarParticle campaign in industry reporting. Industry reporting also initially referred to the actors involved in this campaign as UNC2452, NOBELIUM, Dark Halo, and SolarStorm. In April 2021, the US and UK governments attributed the SolarWinds Compromise to Russia's Foreign Intelligence Service (SVR); public statements included citations to APT29, Cozy Bear, and The Dukes. The US government assessed that of the approximately 18,000 affected public and private sector customers of Solar Winds’ Orion product, a much smaller number were compromised by follow-on APT29 activity on their systems."
-  },
-  {
    "id": "kev-CVE-2019-15107",
    "titre": "Webmin Command Injection Vulnerability",
    "titre_en": "Webmin Command Injection Vulnerability",
@@ -4783,26 +4327,6 @@
     }
    ],
    "resume": "Operation Spalax was a campaign that primarily targeted Colombian government organizations and private companies, particularly those associated with the energy and metallurgical industries. The Operation Spalax threat actors distributed commodity malware and tools using generic phishing topics related to COVID-19, banking, and law enforcement action. Security researchers noted indicators of compromise and some infrastructure overlaps with other campaigns dating back to April 2018, including at least one separately attributed to APT-C-36, however identified enough differences to report this as separate, unattributed activity."
-  },
-  {
-   "id": "wd-Q76469499",
-   "titre": "China Cables",
-   "titre_en": "China Cables",
-   "titre_fr": "China Cables",
-   "date": "2019-11-24",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "moyen",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/China_Cables",
-   "lien_en": "https://en.wikipedia.org/wiki/China_Cables",
-   "licence": "CC BY-SA 4.0",
-   "langues": 6,
-   "vues": 4424,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
   },
   {
    "id": "attack-C0012",
@@ -6473,26 +5997,6 @@
    "vecteur": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
   },
   {
-   "id": "wd-Q107576797",
-   "titre": "Projet Pegasus (journalisme)",
-   "titre_en": "Pegasus Project (investigation)",
-   "titre_fr": "Projet Pegasus (journalisme)",
-   "date": "2021-07-18",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "moyen",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Projet_Pegasus_%28journalisme%29",
-   "lien_en": "https://en.wikipedia.org/wiki/Pegasus_Project_%28investigation%29",
-   "licence": "CC BY-SA 4.0",
-   "langues": 10,
-   "vues": 35625,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
-  },
-  {
    "id": "kev-CVE-2021-35464",
    "titre": "ForgeRock Access Management (AM) Core Server Remote Code Execution Vulnerability",
    "titre_en": "ForgeRock Access Management (AM) Core Server Remote Code Execution Vulnerability",
@@ -6850,26 +6354,6 @@
    "resume": "Improper Access Control in Citrix ShareFile storage zones controller may allow an unauthenticated attacker to remotely compromise the storage zones controller.",
    "score": 9.8,
    "vecteur": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
-  },
-  {
-   "id": "wd-Q108782773",
-   "titre": "Pandora Papers",
-   "titre_en": "Pandora Papers",
-   "titre_fr": "Pandora Papers",
-   "date": "2021-10-02",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "grand",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Pandora_Papers",
-   "lien_en": "https://en.wikipedia.org/wiki/Pandora_Papers",
-   "licence": "CC BY-SA 4.0",
-   "langues": 44,
-   "vues": null,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
   },
   {
    "id": "wd-Q108801995",
@@ -7519,26 +7003,6 @@
    "resume": "APT28 Nearest Neighbor Campaign was conducted by APT28 from early February 2022 to November 2024 against organizations and individuals with expertise on Ukraine. APT28 primarily leveraged living-off-the-land techniques, while leveraging the zero-day exploitation of CVE-2022-38028. Notably, APT28 leveraged Wi-Fi networks in close proximity to the intended target to gain initial access to the victim environment. By daisy-chaining multiple compromised organizations nearby the intended target, APT28 discovered dual-homed systems (with both a wired and wireless network connection) to enable Wi-Fi and use compromised credentials to connect to the victim network."
   },
   {
-   "id": "wd-Q110971835",
-   "titre": "Suisse secrets",
-   "titre_en": "Suisse Secrets",
-   "titre_fr": "Suisse secrets",
-   "date": "2022-02-20",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "moyen",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Suisse_secrets",
-   "lien_en": "https://en.wikipedia.org/wiki/Suisse_Secrets",
-   "licence": "CC BY-SA 4.0",
-   "langues": 7,
-   "vues": 10136,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
-  },
-  {
    "id": "wd-Q117467179",
    "titre": "Viasat hack",
    "titre_en": "Viasat hack",
@@ -8143,26 +7607,6 @@
    "licence": "CC BY-SA 4.0",
    "langues": 2,
    "vues": 12797,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
-  },
-  {
-   "id": "wd-Q113006064",
-   "titre": "Uber Files",
-   "titre_en": "Uber Files",
-   "titre_fr": "Uber Files",
-   "date": "2022-07-10",
-   "precision_date": "jour",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "moyen",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Uber_Files",
-   "lien_en": "https://en.wikipedia.org/wiki/Uber_Files",
-   "licence": "CC BY-SA 4.0",
-   "langues": 10,
-   "vues": 4359,
    "cves": [],
    "techniques": [],
    "resume": ""
@@ -11047,26 +10491,6 @@
     }
    ],
    "resume": "2025 Poland Wiper Attacks is a Russian state-sponsored campaign that conducted destructive cyberattacks against Polish energy infrastructure in December 2025. Targets included more than 30 wind and photovoltaic farms, a combined heat and power (CHP) plant, and a manufacturing sector company. The attacks on the distributed energy resources (DER) disrupted communications between affected facilities and the distribution system operator, but did not impact electricity generation or heat supply. Across the campaign, threat actors deployed two previously undocumented wiper tools, DynoWiper, a Windows-based wiper and LazyWiper, a PowerShell wiper, distributed via malicious Group Policy Objects. At the CHP plant, threat actors had maintained access since at least March 2025, using that foothold to obtain credentials and move laterally before attempting wiper deployment. Some reporting has assessed the activity to be consistent with Russian Federal Security Service (FSB) threat activity group Dragonfly, also tracked as STATIC TUNDRA, while other reporting attributes the destructive wiper activities to the Russian General Staff Main Intelligence Directorate (GRU) threat activity group ELECTRUM, also tracked as Sandworm Team."
-  },
-  {
-   "id": "wd-Q133519843",
-   "titre": "Fuite d'un groupe de discussion du gouvernement des États-Unis",
-   "titre_en": "United States government group chat leaks",
-   "titre_fr": "Fuite d'un groupe de discussion du gouvernement des États-Unis",
-   "date": "2025-03-01",
-   "precision_date": "mois",
-   "categorie": "FUITE DE DONNÉES",
-   "envergure": "grand",
-   "source": "Wikipédia",
-   "langue": "fr",
-   "lien": "https://fr.wikipedia.org/wiki/Fuite_d%27un_groupe_de_discussion_du_gouvernement_des_%C3%89tats-Unis",
-   "lien_en": "https://en.wikipedia.org/wiki/United_States_government_group_chat_leaks",
-   "licence": "CC BY-SA 4.0",
-   "langues": 17,
-   "vues": 185365,
-   "cves": [],
-   "techniques": [],
-   "resume": ""
   },
   {
    "id": "attack-C0058",

@@ -131,10 +131,19 @@ def main() -> None:
         logging.error("%s", erreur)
         sys.exit(1)
 
-    numero = assembler(selection, articles, failles, numero_jour, aujourd_hui)
+    # L'histoire du jour : choisie maintenant, inscrite dans publies.json seulement si le numéro est généré
+    from histoire import choix as choix_histoire
+    from histoire.mise_en_forme import preparer
+    histoire = choix_histoire.histoire_du_jour(aujourd_hui)
+
+    numero = assembler(selection, articles, failles, numero_jour, aujourd_hui,
+                       histoire=preparer(histoire, aujourd_hui))
     chemin = generer_html(numero, config.DOSSIER_SORTIE / f"traces_{aujourd_hui.isoformat()}.html")
+    choix_histoire.memoriser(aujourd_hui, histoire)
     print(f"\nTRACES N°{numero['numero']:02d} généré : {chemin}")
     print(f"À la une : {numero['une']['titre']}")
+    if histoire:
+        print(f"L'histoire : {histoire['candidat']['titre']} ({histoire['type']})")
 
 
 if __name__ == "__main__":

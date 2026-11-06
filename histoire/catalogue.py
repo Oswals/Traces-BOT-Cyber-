@@ -150,6 +150,8 @@ def candidats_attack() -> list[dict]:
     for c in attack.campagnes():
         if not c["date"] or int(c["date"][:4]) < config.HISTOIRE_ANNEE_MIN or not c["techniques"]:
             continue
+        if c["titre"] in config.HISTOIRE_EXCLURE:
+            continue
         resultat.append({
             "id": f"attack-{c['id']}", "titre": c["titre"], "titre_en": c["titre"], "titre_fr": None,
             "date": c["date"], "precision_date": "mois",  # ATT&CK ne date qu'au mois près

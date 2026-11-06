@@ -32,7 +32,8 @@ LONGUEUR_POINT_FAILLE = 90   # page « Failles » : 3 fiches de 5 points, 2 lign
 
 
 def assembler(selection: Selection, articles: list[Article], failles: list[Faille],
-              numero: int, jour: date, redacteur: Redacteur | None = None) -> dict:
+              numero: int, jour: date, redacteur: Redacteur | None = None,
+              histoire: dict | None = None) -> dict:
     redacteur = redacteur or SansIA()
     return {
         "demo": False,
@@ -43,7 +44,7 @@ def assembler(selection: Selection, articles: list[Article], failles: list[Faill
         "failles": [_fiche_faille(f, redacteur) for f in selection.failles],
         "radar": _radar(selection, articles, failles),
         "arnaque": _arnaque(selection.arnaque),
-        "histoire": None,   # bibliothèque Histoire : étape 7
+        "histoire": histoire,  # préparée par histoire/mise_en_forme.py
         "lexique": [],      # lexique.json : étape 7
     }
 

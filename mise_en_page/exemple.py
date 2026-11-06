@@ -10,9 +10,11 @@ Valeurs possibles :
 
 import json
 
-from config import DOSSIER_ARNAQUES
+from config import DOSSIER_ARNAQUES, DOSSIER_EPISODES
+from histoire.mise_en_forme import page_episode
 
 LIEN_DEMO = "https://example.org/"  # domaine réservé aux exemples, ne mène nulle part
+_EPISODE = json.loads((DOSSIER_EPISODES / "wannacry-2017.json").read_text(encoding="utf-8"))
 
 NUMERO = {
     "demo": True,
@@ -177,51 +179,12 @@ NUMERO = {
         "lien_cybermalveillance": "https://www.cybermalveillance.gouv.fr/",
     },
 
-    # --- Pages 6 et 7 : l'histoire (bibliothèque vérifiée, étape 7) ---------------
+    # --- Pages 7 et 8 : l'histoire (le vrai épisode WannaCry, encore en relecture) ---
     "histoire": {
-        "titre": "Titre de l'épisode",
-        "annee": "2017",
-        "chapeau": "Épisode de démonstration. Les vrais épisodes seront rédigés à l'avance, "
-                   "vérifiés et sourcés à l'étape 7 (le premier : WannaCry).",
-        "sections_p1": [
-            {"titre": "Contexte", "texte": "Ici, le décor : quelle organisation, quel pays, quelle "
-             "époque, et pourquoi la cible était exposée. Deux ou trois paragraphes courts, "
-             "compréhensibles sans connaissances préalables."},
-            {"titre": "Déroulement", "texte": "Ici, le récit des faits dans l'ordre : la première "
-             "intrusion, la propagation, la découverte par les défenseurs, puis la réaction. "
-             "Chaque fait important renvoie à une source listée en fin d'épisode."},
-            {"titre": "La faille", "texte": "Ici, l'explication technique de la faille ou de la "
-             "technique utilisée, avec sa CVE si elle existe, et le lien avec le glossaire CWE."},
-        ],
-        "sections_p2": [
-            {"titre": "Victimes", "texte": "Ici, qui a été touché, combien, dans quels secteurs."},
-            {"titre": "Conséquences", "texte": "Ici, le coût, les services interrompus, les suites "
-             "judiciaires et réglementaires."},
-            {"titre": "Enseignements", "texte": "Ici, ce que l'événement a changé et les bonnes "
-             "pratiques qui en découlent : ce qu'il faut retenir pour un cours ou un entretien."},
-        ],
-        "chronologie": [
-            {"date": "Mars", "evenement": "Publication du correctif par l'éditeur."},
-            {"date": "Avril", "evenement": "Divulgation publique de l'outil d'exploitation."},
-            {"date": "12 mai", "evenement": "Début de l'attaque, propagation mondiale."},
-            {"date": "13 mai", "evenement": "Découverte d'un moyen d'arrêter la propagation."},
-            {"date": "Décembre", "evenement": "Attribution officielle par plusieurs États."},
-        ],
-        "schema": [
-            {"etape": "Entrée", "detail": "Port réseau exposé"},
-            {"etape": "Exploitation", "detail": "Faille du service"},
-            {"etape": "Installation", "detail": "Dépôt du programme"},
-            {"etape": "Propagation", "detail": "Recherche d'autres machines"},
-            {"etape": "Impact", "detail": "Chiffrement et rançon"},
-        ],
-        "lexique": [
-            {"terme": "Ver", "definition": "Programme malveillant qui se propage seul d'une machine à l'autre."},
-            {"terme": "Correctif", "definition": "Mise à jour qui supprime une faille."},
-        ],
-        "sources": [
-            {"titre": "Source officielle 1 (exemple)", "lien": LIEN_DEMO},
-            {"titre": "Source officielle 2 (exemple)", "lien": LIEN_DEMO},
-        ],
+        "type": "complet", "titre": _EPISODE["titre"], "annee": _EPISODE["date"][:4],
+        "date": "12 mai 2017", "categorie": _EPISODE["categorie"], "envergure": "Grand événement",
+        "anniversaire": "", "lien_source": "",
+        **page_episode(_EPISODE, avec_cves=False),
     },
 
     # --- Lexique de la une (termes présents dans le numéro) ----------------------

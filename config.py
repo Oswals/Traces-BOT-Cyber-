@@ -193,6 +193,20 @@ HISTOIRE_EXCLURE = [
     "WannaCry",                            # page du logiciel ; on garde celle de l'attaque
     "2026 Internet blackout in Iran",      # coupures décidées par un gouvernement :
     "2024 Bangladesh internet blackouts",  # pas de cause technique
+    # Fuites venues du journalisme ou de lanceurs d'alerte, sans cause technique identifiable
+    # (décision du 2026-11-06 ; Panama Papers reste : logiciels non à jour chez Mossack Fonseca)
+    "Pandora Papers",
+    "Paradise Papers",
+    "Snowden disclosures",
+    "United States diplomatic cables leak",
+    "Football Leaks",
+    "Uber Files",
+    "Suisse Secrets",
+    "China Cables",
+    "United States government group chat leaks",   # erreur humaine (journaliste ajouté à la conversation)
+    "Pegasus Project (investigation)",
+    # Doublons entre sources que le titre ou les CVE ne suffisent pas à repérer
+    "SolarWinds Compromise",   # campagne ATT&CK = page Wikipédia de SolarWinds (forcée en grand)
 ]
 HISTOIRE_CATEGORIE_FORCEE = {
     "2020 United States federal government data breach": "CYBERATTAQUE",  # attaque de la chaîne logicielle

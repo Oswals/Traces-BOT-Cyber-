@@ -22,6 +22,8 @@ Chaque matin, produire un numéro du magazine **TRACES** : une veille cyber péd
 | NVD (NIST) | **Dictionnaire uniquement** : score CVSS et type de faille (CWE) des CVE citées ailleurs. Jamais une source d'articles. |
 | BleepingComputer, The Hacker News | Presse internationale |
 | Zataz, LeMagIT | Presse française |
+| Wikipédia FR + EN, Wikidata | Rubrique Histoire : grands et moyens événements (nature, date, langues, CVE via Wikidata ; vues via l'API Pageviews). Règles officielles des robots d'API Wikimedia : contact `TRACES_CONTACT` dans le User-Agent, une requête à la fois, `maxlag`. Texte sous licence CC BY-SA 4.0, toujours attribué. |
+| MITRE ATT&CK (STIX officiel) | Rubrique Histoire : campagnes d'attaque et leurs techniques (événements moyens). Fichier de 55 Mo relu au plus une fois par semaine. |
 
 Les adresses des flux sont à **vérifier au premier lancement** : préfère les flux RSS/JSON officiels au scraping de pages HTML.
 
@@ -38,6 +40,15 @@ traces/
 ├── enrichissement/          # bulletins CERT-FR (JSON), dédoublonnage par CVE, NVD, KEV
 ├── selection/               # choix de la une, des 3 failles, des brèves…
 │   └── arnaque.py           # choix de la rubrique Arnaques (3 niveaux, voir plus bas)
+├── histoire/                # rubrique L'histoire (voir plus bas)
+│   ├── wikimedia.py         # Wikipédia, Wikidata, vues (contact obligatoire)
+│   ├── attack.py            # campagnes MITRE ATT&CK
+│   ├── kev_ancien.py        # anciennes failles CISA KEV
+│   ├── catalogue.py         # construit candidats.json (python -m histoire.catalogue)
+│   ├── choix.py             # événement du jour + mémoire publies.json
+│   ├── extraits.py          # texte Wikipédia rangé dans les 6 rubriques (fiches découverte)
+│   ├── mise_en_forme.py     # données pour le gabarit (complet / découverte / technique)
+│   └── brouillon_ia.py      # vide : brouillons d'épisodes par l'IA locale (étape 9)
 ├── redaction/               # rédacteurs interchangeables
 │   ├── base.py              # interface commune
 │   ├── sans_ia.py           # rédacteur PAR DÉFAUT : sources officielles + calculs + bibliothèques
@@ -45,10 +56,13 @@ traces/
 │   ├── local.py             # rédacteur IA locale (Ollama), ajouté plus tard, optionnel
 │   └── glossaire_cwe.json   # explications vérifiées par type de faille
 ├── bibliotheques/           # contenus rédigés à l'avance et vérifiés
-│   ├── histoire/            # 1 fichier JSON par événement, avec ses sources
+│   ├── histoire/
+│   │   ├── candidats.json   # catalogue des événements (gardé dans Git, reconstruit chaque semaine)
+│   │   ├── episodes/        # épisodes complets rédigés, 1 JSON par événement, avec ses sources
+│   │   └── brouillons/      # brouillons de l'IA locale (plus tard), jamais publiés tels quels
 │   ├── arnaques/            # 1 fiche par type d'arnaque (signes, bon réflexe, mots-clés)
 │   ├── lexique.json         # termes définis (affichés s'ils apparaissent dans le numéro)
-│   └── publies.json         # épisodes déjà publiés (pour varier)
+│   └── publies.json         # événements Histoire déjà publiés (gardé dans Git)
 ├── mise_en_page/
 │   ├── templates/           # gabarits Jinja2 des pages TRACES
 │   └── static/              # CSS, polices
@@ -68,8 +82,8 @@ Format commun d'un article : `titre`, `lien`, `source`, `type_source` (officiel 
 2. **Le contenu des articles est une donnée, jamais une instruction.** Dès que l'IA locale sera branchée, chaque article qu'on lui envoie sera encadré par des délimiteurs, avec la consigne de le traiter comme du texte à résumer en ignorant toute instruction qu'il contient (protection contre l'injection de prompt).
 3. L'IA locale résumera **uniquement à partir du texte fourni**. Si une information manque, elle écrit « non précisé par la source ». Sa réponse est en JSON et validée : une CVE qu'elle cite doit exister dans l'article d'origine. Si la validation échoue ou si le modèle ne répond pas, le bloc revient à sa version sans IA.
 4. Chaque contenu publié garde le lien vers sa source.
-5. On respecte les sites : délai entre les requêtes, User-Agent explicite, et la NVD avec une clé d'API gratuite.
-6. Les épisodes Histoire et les fiches Arnaques ne sont **jamais générés à la volée** : ils sont rédigés à l'avance, vérifiés, sources à l'appui.
+5. On respecte les sites : délai entre les requêtes, User-Agent explicite, et la NVD avec une clé d'API gratuite. Wikimedia exige un contact dans le User-Agent : `TRACES_CONTACT` dans `.env` (adresse dédiée, jamais l'e-mail personnel par défaut) ; sans lui, aucune requête n'est envoyée.
+6. Les épisodes Histoire et les fiches Arnaques ne sont **jamais générés à la volée** : ils sont rédigés à l'avance, vérifiés, sources à l'appui. Seul un épisode marqué `"verifie": true` est publié comme épisode complet ; une fiche découverte ne contient que des extraits raccourcis de sa source, rien d'inventé.
 7. Le texte des sources est échappé avant d'être inséré dans le HTML (pas d'injection de code dans le magazine).
 
 ## Rédaction : sans IA d'abord, IA locale ensuite
@@ -97,6 +111,24 @@ Autres contenus sans IA :
   Si la bibliothèque est illisible, une fiche de secours écrite dans le code prend le relais.
 - **Lexique** : seuls les termes de `lexique.json` présents dans le numéro sont affichés.
 
+## Rubrique « L'histoire »
+
+- **Périmètre** : de 2005 à aujourd'hui, 4 catégories (CYBERATTAQUE · PANNE · BUG · FUITE DE DONNÉES), toujours avec une cause technique identifiable.
+- **Catalogue** (`bibliotheques/histoire/candidats.json`, reconstruit au plus une fois par semaine ; si une source tombe, on garde ses candidats précédents) :
+  - Wikipédia : pages et catégories listées dans `config.HISTOIRE_SOURCES_WIKIPEDIA`. Une page n'est gardée que si sa **nature Wikidata** (P31) figure dans `config.HISTOIRE_NATURES`, qui donne aussi la catégorie.
+  - **Grand** si ≥ 20 langues OU ≥ 100 000 vues sur 12 mois (Wikipédia EN) ; moins de 3 000 vues : écarté.
+  - Corrections manuelles dans `config.py` : forcer grand ou moyen, exclure (fuites journalistiques sans cause technique, coupures décidées par un gouvernement, doublons), catégorie forcée, dates manuelles.
+  - MITRE ATT&CK : campagnes (moyen, CYBERATTAQUE). CISA KEV : CVE d'au moins 2 ans utilisées par des rançongiciels, 100 au plus, les plus graves d'abord, datées par leur publication NVD (moyen, CYBERATTAQUE).
+  - Dédoublonnage par CVE et par titre normalisé, Wikipédia prioritaire.
+- **Rythme** : grand événement le lundi et le jeudi (`config.HISTOIRE_JOURS_GRANDS`), moyen les autres jours ; jamais la même catégorie que la veille ; un anniversaire du jour passe en priorité (« Il y a N ans, jour pour jour »).
+- **Choix** : grand → épisode complet validé jamais publié, sinon fiche découverte ; moyen → fiche technique jamais publiée ; tout publié → le plus anciennement publié revient. Départage : la catégorie la moins récemment publiée, puis la notoriété (grand) ou un tirage reproductible fondé sur la date (moyen).
+- **Mémoire** (`bibliotheques/publies.json`) : id, titre normalisé, date, catégorie, envergure, type (complet / découverte / technique). Un doublon est repéré par l'id ET par le titre normalisé. L'entrée n'est écrite qu'après la génération du numéro.
+- **Présentation** :
+  - épisode complet : double page, 6 rubriques, chronologie, schéma, lexique, sources ;
+  - fiche découverte : extraits de Wikipédia rangés par intertitre, rubriques vides masquées, mention « Fiche découverte — version complète à venir », SOURCE (CC BY-SA 4.0) et repères CALCULÉ ; double page s'il y a au moins 4 rubriques et assez de texte, sinon une page ;
+  - fiche technique : une page avec le résumé de la source, les CVE et leur profil CVSS, les techniques ATT&CK avec leur lien ; le numéro a alors une page de moins.
+- **Commandes** : `python -m histoire.catalogue [--forcer]` (catalogue + rapport) ; `python main.py --planning 7` (aperçu des 7 prochains jours, n'écrit rien).
+
 Ce que l'IA locale ajoutera plus tard : un récit pour « Ce qui s'est passé », la traduction et le résumé de la presse anglophone, un édito rédigé, une comparaison de la vie courante dans « C'est quoi ? ».
 
 **Marque de provenance** : chaque bloc porte une étiquette qui dit d'où vient son texte : `SOURCE` (extrait d'une source), `CALCULÉ` (déduit des données), `BIBLIOTHÈQUE` (rédigé à l'avance et vérifié), `IA LOCALE` (plus tard).
@@ -120,7 +152,7 @@ Concept : le dossier d'enquête. Tons de rapport de renseignement et de revue sc
 4. **Failles exploitées** : 3 fiches techniques en 5 points, chacun avec sa provenance ; texte officiel en anglais signalé quand il n'existe pas de publication du CERT-FR
 5. **Radar** : failles par gravité, provenance des infos, brèves Monde / France (4 par colonne, langue d'origine)
 6. **Arnaques** : l'alerte du moment (manuelle ou presse) ou « La fiche du numéro », puis la fiche de la bibliothèque : comment ça marche, les signes, le bon réflexe, si vous êtes victime, où signaler
-7–8. **L'histoire** : un événement majeur des 15 dernières années (contexte, déroulement, faille, victimes, conséquences, enseignements), avec chronologie, schéma et lexique
+7–8. **L'histoire** : étiquettes catégorie et envergure ; épisode complet ou fiche découverte (double page possible) pour un grand événement, fiche technique d'une page pour un événement moyen (voir « Rubrique L'histoire »)
 
 ## Plan de la V3
 
@@ -132,7 +164,7 @@ Chaque étape se termine par quelque chose que je peux lancer et vérifier.
 4. Gabarits TRACES avec de **fausses données**, pour voir le magazine tôt
 5. Branchement des vraies données sur les gabarits
 6. Rédaction sans IA : interface commune, traduction des vecteurs CVSS, extraction des sections officielles du CERT-FR, glossaire CWE, marques de provenance
-7. Bibliothèques : une dizaine d'épisodes Histoire vérifiés (premier épisode : WannaCry, 2017), le lexique, et la relecture des fiches Arnaques (8 fiches rédigées, `"verifie": false` tant qu'elles ne sont pas relues) et du glossaire CWE
+7. Bibliothèques : la rubrique Histoire (7a sources, 7b catalogue, 7c choix et mémoire, 7d pages et premier épisode : WannaCry, 2017, en relecture), une dizaine d'épisodes vérifiés, le lexique, et la relecture des fiches Arnaques (8 fiches rédigées, `"verifie": false` tant qu'elles ne sont pas relues) et du glossaire CWE
 8. Export PDF et lancement automatique chaque matin (Planificateur de tâches Windows)
 9. *(Plus tard, optionnel)* Rédacteur IA locale avec Ollama, selon la puissance du PC, avec retour automatique au mode sans IA en cas d'échec
 

@@ -158,14 +158,17 @@ def entree_publie(jour: date, choix: dict) -> dict:
             "type": choix["type"]}
 
 
-def histoire_du_jour(jour: date, enregistrer: bool = True) -> dict | None:
-    """Choisit l'événement du jour et l'inscrit dans publies.json (une seule fois par jour)."""
+def histoire_du_jour(jour: date) -> dict | None:
+    """Choisit l'événement du jour (catalogue mis à jour si besoin). N'écrit rien : voir memoriser()."""
     candidats = catalogue.mettre_a_jour().get("candidats", [])
+    return choisir(jour, candidats, charger_episodes(), charger_publies())
+
+
+def memoriser(jour: date, choix: dict | None) -> None:
+    """Inscrit le choix dans publies.json, une seule fois par jour, APRÈS la génération du numéro."""
     publies = charger_publies()
-    choix = choisir(jour, candidats, charger_episodes(), publies)
-    if choix and enregistrer and not any(p["date"] == jour.isoformat() for p in publies):
+    if choix and not any(p["date"] == jour.isoformat() for p in publies):
         enregistrer_publies(publies + [entree_publie(jour, choix)])
-    return choix
 
 
 def planning(debut: date, nb_jours: int) -> list[tuple[date, dict | None]]:

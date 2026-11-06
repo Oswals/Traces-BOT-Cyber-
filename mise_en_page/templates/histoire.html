@@ -1,57 +1,158 @@
-{% from "_macros.html" import entete, folio, prov, lexique %}
+{% from "_macros.html" import entete, folio, prov, lexique, libelle_niveau %}
 {% set h = numero.histoire %}
 
+{# Étiquettes en tête de page : catégorie, envergure, anniversaire #}
+{% macro etiquettes(h) -%}
+<div class="histoire-tags">
+  <span class="tag-categorie">{{ h.categorie }}</span>
+  <span class="tag-envergure">{{ h.envergure }}</span>
+  {% if h.anniversaire %}<span class="tag-anniversaire">{{ h.anniversaire }}</span>{% endif %}
+</div>
+{%- endmacro %}
+
+{# Une rubrique de texte ; en anglais si la source l'est #}
+{% macro rubrique(s, decouverte=False) -%}
+<div class="section-histoire">
+  <h3>{{ s.titre }}{% if decouverte and s.intertitre %} <span class="mono discret intertitre">« {{ s.intertitre }} »</span>{% endif %}</h3>
+  <p{% if s.langue != "fr" %} class="en" lang="{{ s.langue }}"{% endif %}>{{ s.texte }}</p>
+</div>
+{%- endmacro %}
+
+{# Une CVE : score, type et profil en 8 cases #}
+{% macro bloc_cve(c) -%}
+<div class="cve-histoire">
+  <div class="point-tete">
+    <span><a class="mono" href="{{ c.lien|lien }}">{{ c.cve }}</a> · {{ c.type }}</span>
+    <span class="pastille niv-{{ c.niveau }}">{{ c.score|virgule }} · {{ libelle_niveau(c.niveau) }}</span>
+  </div>
+  {% if c.profil %}
+  <div class="profil profil-compact">
+    {% for case in c.profil %}
+    <div class="case niv-{{ case.niveau }}"><div class="case-critere">{{ case.critere }}</div><div class="case-valeur">{{ case.valeur }}</div></div>
+    {% endfor %}
+  </div>
+  <div class="point-tete">{{ prov("calcule", "Vecteur CVSS " ~ c.version) }}{{ prov("source", "NVD", c.lien) }}</div>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro reperes(h) -%}
+<div class="lexique">
+  <div class="point-tete"><span class="etiquette">Repères</span>{{ prov("calcule", "Données") }}</div>
+  <dl class="identite">
+    {% for libelle, valeur in h.reperes %}<dt>{{ libelle }}</dt><dd>{{ valeur }}</dd>{% endfor %}
+  </dl>
+</div>
+{%- endmacro %}
+
+{% macro liste_sources(h) -%}
+<div class="lexique" style="margin-top: 14px">
+  <span class="etiquette">Sources</span>
+  <ol class="sources-liste">
+    {% for s in h.sources %}<li><a href="{{ s.lien|lien }}">{{ s.titre }}</a></li>{% endfor %}
+  </ol>
+</div>
+{%- endmacro %}
+
+
 {% if not h %}
-{# Bibliothèque Histoire encore vide (elle sera remplie à l'étape 7) : une seule page d'attente #}
+{# Catalogue vide (aucune source joignable) : une page d'attente #}
 <section class="page" id="histoire">
   {{ entete(numero, "05", "L'histoire") }}
   <div class="page-contenu">
     <div class="histoire-titre">
-      <div class="point-tete">{{ prov("bibliotheque", "Épisodes vérifiés") }}</div>
-      <h1>Épisodes en préparation</h1>
-      <p class="chapeau">Chaque numéro racontera un événement majeur des quinze dernières années, rédigé à l'avance et vérifié, sources à l'appui. Le premier épisode sera WannaCry (2017).</p>
+      <h1>Histoire indisponible</h1>
+      <p class="chapeau">Le catalogue des événements est vide : lance <span class="mono">python -m histoire.catalogue</span>.</p>
     </div>
   </div>
   {{ folio(numero, 7) }}
 </section>
-{% else %}
 
-{# --- Page 6 : contexte, déroulement, faille + chronologie --- #}
+{% elif h.type == "technique" %}
+{# --- Événement moyen : une page de fiche technique --- #}
 <section class="page" id="histoire">
-  {{ entete(numero, "05", "L'histoire") }}
+  {{ entete(numero, "05", "L'histoire · fiche technique") }}
   <div class="page-contenu">
+    {{ etiquettes(h) }}
     <div class="histoire-titre">
-      <div class="point-tete">
-        <div class="histoire-annee">{{ h.annee }}</div>
-        {{ prov("bibliotheque", "Épisode vérifié") }}
-      </div>
-      <h1>{{ h.titre }}</h1>
-      <p class="chapeau">{{ h.chapeau }}</p>
+      <div class="histoire-annee">{{ h.annee }}</div>
+      <h1{% if h.resume.langue != "fr" %} lang="{{ h.resume.langue }}"{% endif %}>{{ h.titre }}</h1>
     </div>
 
-    <div class="grille" style="margin-top: 28px">
+    <div class="grille" style="margin-top: 16px">
       <div class="col-4">
-        {% for s in h.sections_p1 %}
-        <div class="section-histoire"><h3>{{ s.titre }}</h3><p>{{ s.texte }}</p></div>
-        {% endfor %}
+        <div class="point-tete"><span class="etiquette">Ce qu'en dit la source</span>
+          <span>{% if h.resume.langue != "fr" %}<span class="langue">{{ h.resume.langue|upper }}</span> {% endif %}{{ prov("source", h.resume.source, h.resume.lien) }}</span></div>
+        <p class="chapeau{% if h.resume.langue != 'fr' %} en" lang="{{ h.resume.langue }}{% endif %}">{{ h.resume.texte or "Résumé non fourni par la source." }}</p>
+
+        {% for c in h.cves %}{{ bloc_cve(c) }}{% endfor %}
+
+        {% if h.techniques %}
+        <div class="point-tete" style="margin-top: 16px"><span class="etiquette">Techniques d'attaque (MITRE ATT&amp;CK)</span>{{ prov("source", "MITRE ATT&CK", h.lien_source) }}</div>
+        <ul class="techniques">
+          {% for t in h.techniques %}<li><a class="mono" href="{{ t.lien|lien }}">{{ t.id }}</a> <span lang="en">{{ t.nom }}</span></li>{% endfor %}
+        </ul>
+        {% if h.techniques_reste %}<p class="mono discret">… et {{ h.techniques_reste }} autres : <a href="{{ h.lien_source|lien }}">liste complète sur attack.mitre.org</a></p>{% endif %}
+        {% endif %}
       </div>
       <aside class="col-2">
-        <span class="etiquette">Chronologie</span>
-        <ol class="chronologie" style="margin-top: 8px">
-          {% for c in h.chronologie %}
-          <li><span class="date">{{ c.date }}</span>{{ c.evenement }}</li>
-          {% endfor %}
-        </ol>
+        {{ reperes(h) }}
+        {{ liste_sources(h) }}
+        {% if h.attribution %}<p class="mono discret" style="margin-top: 10px">{{ h.attribution }}</p>{% endif %}
       </aside>
     </div>
   </div>
   {{ folio(numero, 7) }}
 </section>
 
-{# --- Page 7 : schéma, victimes, conséquences, enseignements --- #}
+{% else %}
+{# --- Grand événement : épisode complet ou fiche découverte --- #}
+{% set decouverte = h.type == "découverte" %}
+{# Double page : 3 rubriques en page 1 (épisode) ou 2 (découverte, sans schéma en page 2) #}
+{% set coupe = (2 if decouverte else 3) if h.double else h.sections|length %}
+<section class="page" id="histoire">
+  {{ entete(numero, "05", "L'histoire") }}
+  <div class="page-contenu">
+    {{ etiquettes(h) }}
+    <div class="histoire-titre">
+      <div class="point-tete">
+        <div class="histoire-annee">{{ h.annee }}</div>
+        {% if decouverte %}
+        <span>{% if h.langue != "fr" %}<span class="langue">{{ h.langue|upper }}</span> {% endif %}{{ prov("source", "Wikipédia (CC BY-SA 4.0)", h.lien_source) }}</span>
+        {% else %}
+        {{ prov("bibliotheque", "Épisode vérifié" if h.verifie else "Épisode en relecture") }}
+        {% endif %}
+      </div>
+      <h1>{{ h.titre }}</h1>
+      {% if h.chapeau.texte %}<p class="chapeau{% if h.chapeau.langue != 'fr' %} en" lang="{{ h.chapeau.langue }}{% endif %}">{{ h.chapeau.texte }}</p>{% endif %}
+      {% if decouverte %}<p class="decouverte-mention">Fiche découverte — version complète à venir{% if h.texte_indisponible %} · texte de la source indisponible aujourd'hui{% endif %}</p>{% endif %}
+    </div>
+
+    <div class="grille" style="margin-top: 20px">
+      <div class="col-4">
+        {% for s in h.sections[:coupe] %}{{ rubrique(s, decouverte) }}{% endfor %}
+        {% if not h.double %}{% for c in h.cves %}{{ bloc_cve(c) }}{% endfor %}{% endif %}
+      </div>
+      <aside class="col-2">
+        {% if h.chronologie %}
+        <span class="etiquette">Chronologie</span>
+        <ol class="chronologie" style="margin-top: 8px">
+          {% for c in h.chronologie %}<li><span class="date">{{ c.date }}</span>{{ c.evenement }}</li>{% endfor %}
+        </ol>
+        {% endif %}
+        {% if h.reperes %}{{ reperes(h) }}{% endif %}
+        {% if not h.double %}{{ liste_sources(h) }}{% endif %}
+      </aside>
+    </div>
+  </div>
+  {{ folio(numero, 7) }}
+</section>
+
+{% if h.double %}
 <section class="page" id="histoire-suite">
   {{ entete(numero, "05", "L'histoire · suite") }}
   <div class="page-contenu">
+    {% if h.schema %}
     <span class="etiquette">Schéma de l'attaque</span>
     <div class="schema">
       {% for e in h.schema %}
@@ -59,24 +160,20 @@
       {% if not loop.last %}<div class="schema-fleche" aria-hidden="true">→</div>{% endif %}
       {% endfor %}
     </div>
+    {% endif %}
 
-    <div class="grille" style="margin-top: 24px">
+    <div class="grille" style="margin-top: 20px">
       <div class="col-4">
-        {% for s in h.sections_p2 %}
-        <div class="section-histoire"><h3>{{ s.titre }}</h3><p>{{ s.texte }}</p></div>
-        {% endfor %}
+        {% for s in h.sections[coupe:] %}{{ rubrique(s, decouverte) }}{% endfor %}
+        {% for c in h.cves %}{{ bloc_cve(c) }}{% endfor %}
       </div>
       <div class="col-2">
         {{ lexique(h.lexique) }}
-        <div class="lexique" style="margin-top: 16px">
-          <span class="etiquette">Sources</span>
-          <ol class="sources-liste">
-            {% for s in h.sources %}<li><a href="{{ s.lien|lien }}">{{ s.titre }}</a></li>{% endfor %}
-          </ol>
-        </div>
+        {{ liste_sources(h) }}
       </div>
     </div>
   </div>
   {{ folio(numero, 8) }}
 </section>
+{% endif %}
 {% endif %}
