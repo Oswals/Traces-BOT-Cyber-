@@ -79,16 +79,23 @@ class TestPreparer(unittest.TestCase):
 
 
 class TestEpisodes(unittest.TestCase):
-    def test_wannacry_complet_mais_pas_encore_valide(self):
+    def test_wannacry_valide(self):
         fichier = config.DOSSIER_EPISODES / "wannacry-2017.json"
         episode = json.loads(fichier.read_text(encoding="utf-8"))
-        self.assertIs(episode["verifie"], False)
+        self.assertIs(episode["verifie"], True)       # relu et validé le 2026-11-06
+        self.assertEqual(episode["a_verifier"], [])
         self.assertEqual(len(episode["sections"]), 6)
         self.assertTrue(all(s["lien"].startswith("https://") for s in episode["sources"]))
-        # Pas encore validé : le choix du jour ne le voit pas comme épisode complet
-        self.assertNotIn(episode["id"], {e["id"] for e in charger_episodes()})
-        self.assertIn(episode["id"], {e["id"] for e in charger_episodes(valides_seulement=False)})
+        self.assertIn(episode["id"], {e["id"] for e in charger_episodes()})
         self.assertTrue(page_episode(episode, avec_cves=False)["double"])
+
+    def test_un_brouillon_n_est_jamais_publie_comme_complet(self):
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as dossier, patch.object(config, "DOSSIER_EPISODES", Path(dossier)):
+            (Path(dossier) / "brouillon.json").write_text('{"id": "wd-1", "verifie": false}', encoding="utf-8")
+            self.assertEqual(charger_episodes(), [])
 
     def test_brouillon_ia_ne_fait_rien(self):
         self.assertIsNone(brouillon_ia.rediger_brouillon({"id": "x"}, "texte"))
