@@ -17,6 +17,7 @@ class FicheNVD:
     cwes: list[str]           # types de faille, ex. ["CWE-79"]
     produits: list[str]       # ex. ["Ivanti Connect Secure"]
     description: str         # description officielle, en anglais
+    publiee: str = ""        # date de publication de la CVE (AAAA-MM-JJ), "" si inconnue
 
 
 @dataclass

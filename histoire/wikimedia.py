@@ -26,6 +26,8 @@ VUES_API = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article"
 # Propriétés Wikidata qui donnent la date d'un événement, par ordre de préférence
 # (P585 = date, P580 = date de début, P575 = date de découverte, P577 = date de publication)
 PROPRIETES_DATE = ["P585", "P580", "P575", "P577"]
+PROPRIETE_NATURE = "P31"   # « nature de l'élément » : cyberattaque, fuite de données, film...
+PROPRIETE_CVE = "P3587"    # identifiant CVE
 # Sites Wikimedia qui ne sont pas des Wikipédia de langue (ne comptent pas dans les langues)
 SITES_NON_LANGUES = {"commonswiki", "wikidatawiki", "specieswiki", "metawiki", "mediawikiwiki",
                      "sourceswiki", "wikimaniawiki", "outreachwiki", "simplewiki"}
@@ -149,7 +151,8 @@ def entites(qids: list[str]) -> dict[str, dict]:
                 if "missing" in entite:
                     continue
                 liens = entite.get("sitelinks", {})
-                date_ev = _date_wikidata(entite.get("claims", {}))
+                claims = entite.get("claims", {})
+                date_ev = _date_wikidata(claims)
                 infos[qid] = {
                     "date": date_ev[0] if date_ev else None,
                     "precision": date_ev[1] if date_ev else None,
@@ -158,8 +161,36 @@ def entites(qids: list[str]) -> dict[str, dict]:
                     "titre_fr": liens.get("frwiki", {}).get("title"),
                     "label_fr": entite.get("labels", {}).get("fr", {}).get("value"),
                     "label_en": entite.get("labels", {}).get("en", {}).get("value"),
+                    "natures": _valeurs(claims, PROPRIETE_NATURE, "id"),
+                    "cves": sorted(set(_valeurs(claims, PROPRIETE_CVE))),
                 }
     return infos
+
+
+def _valeurs(claims: dict, propriete: str, cle: str | None = None) -> list[str]:
+    """Valeurs d'une propriété Wikidata (cle="id" pour un lien vers un autre élément)."""
+    valeurs = []
+    for claim in claims.get(propriete, []):
+        valeur = claim.get("mainsnak", {}).get("datavalue", {}).get("value")
+        if cle and isinstance(valeur, dict):
+            valeur = valeur.get(cle)
+        if isinstance(valeur, str):
+            valeurs.append(valeur)
+    return valeurs
+
+
+def qids_de_titres(langue: str, titres: list[str]) -> dict[str, str]:
+    """{titre: identifiant Wikidata} de pages données par leur titre (ex. événements forcés)."""
+    resultat: dict[str, str] = {}
+    for i in range(0, len(titres), 50):
+        for morceau in _api(api_wiki(langue), {"action": "query", "titles": "|".join(titres[i:i + 50]),
+                                               "redirects": 1, "prop": "pageprops", "ppprop": "wikibase_item"}):
+            resultat.update(_pages_avec_qid(morceau))
+    return resultat
+
+
+def lien_page(langue: str, titre: str) -> str:
+    return f"https://{langue}.wikipedia.org/wiki/{quote(titre.replace(' ', '_'), safe='')}"
 
 
 # --- Nombre de vues sur 12 mois, avec cache ---------------------------------------

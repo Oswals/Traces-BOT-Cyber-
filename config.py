@@ -111,7 +111,7 @@ HISTOIRE_SEUIL_VUES = 100_000
 HISTOIRE_VUES_MIN = 3_000   # en dessous, la page est trop confidentielle : pas candidate
 
 # Pages et catégories Wikipédia où chercher des événements, avec la catégorie TRACES
-# qu'elles donnent. SOUMISES À VALIDATION : python -m histoire.explorer les teste.
+# qu'elles donnent. Le rapport de python -m histoire.catalogue montre ce que chacune apporte.
 #   type "liste"     : on prend les articles liés depuis la page
 #   type "categorie" : on prend les articles de la catégorie (profondeur = sous-catégories)
 HISTOIRE_SOURCES_WIKIPEDIA = [
@@ -131,7 +131,53 @@ HISTOIRE_SOURCES_WIKIPEDIA = [
     {"wiki": "fr", "titre": "Catégorie:Panne informatique", "type": "categorie", "profondeur": 1, "categorie": "PANNE"},
     {"wiki": "fr", "titre": "Catégorie:Bug informatique", "type": "categorie", "profondeur": 1, "categorie": "BUG"},
 ]
-# Un événement trouvé dans plusieurs sources prend la catégorie la plus rare (la plus précise)
+# Les pages liées depuis une liste ne sont pas toutes des événements (films, applis, élections...).
+# On ne garde que celles dont la NATURE Wikidata (propriété P31) figure ici, et c'est elle qui
+# donne la catégorie. None = nature générique : on prend la catégorie de la source.
+# (Natures relevées le 2026-11-06 sur les pages réellement trouvées.)
+HISTOIRE_NATURES = {
+    # Pannes
+    "Q28914147": "PANNE",              # outage (interruption de service)
+    "Q29096392": "PANNE",              # internet outage
+    "Q828827": "PANNE",                # power outage
+    # Bugs et failles
+    "Q179550": "BUG",                  # software bug (bogue)
+    "Q631425": "BUG",                  # vulnerability
+    "Q125498109": "BUG",               # named vulnerability (faille « à nom », ex. Heartbleed)
+    "Q11287": "BUG",                   # exploit
+    "Q751740": "BUG",                  # memory leak
+    "Q2665075": "BUG",                 # timing attack (ex. Spectre)
+    # Fuites de données
+    "Q1172486": "FUITE DE DONNÉES",    # data breach
+    "Q123684261": "FUITE DE DONNÉES",  # privacy data breach
+    "Q123684272": "FUITE DE DONNÉES",  # proprietary data breach
+    "Q2904148": "FUITE DE DONNÉES",    # information leak
+    "Q2775060": "FUITE DE DONNÉES",    # information leakage
+    "Q59193": "FUITE DE DONNÉES",      # Internet leak
+    # Cyberattaques et logiciels malveillants
+    "Q4071928": "CYBERATTAQUE",        # cyberattack
+    "Q17329819": "CYBERATTAQUE",       # distributed denial-of-service attack
+    "Q849340": "CYBERATTAQUE",         # cyberwarfare
+    "Q5368817": "CYBERATTAQUE",        # email hacking
+    "Q14001": "CYBERATTAQUE",          # malware
+    "Q926331": "CYBERATTAQUE",         # ransomware
+    "Q180712": "CYBERATTAQUE",         # computer worm
+    "Q485": "CYBERATTAQUE",            # computer virus
+    "Q14639": "CYBERATTAQUE",          # trojan horse
+    "Q106255432": "CYBERATTAQUE",      # banker trojan
+    "Q24896672": "CYBERATTAQUE",       # point-of-sale malware
+    "Q14645": "CYBERATTAQUE",          # rootkit
+    "Q893147": "CYBERATTAQUE",         # bootkit
+    "Q254569": "CYBERATTAQUE",         # backdoor
+    "Q14644": "CYBERATTAQUE",          # spyware
+    "Q317671": "CYBERATTAQUE",         # botnet
+    "Q3125508": "CYBERATTAQUE",        # hacking tool
+    # Natures génériques : la catégorie vient de la source
+    "Q1190554": None,                  # occurrence
+    "Q12890393": None,                 # incident
+    "Q29137": None,                    # cybercrime
+}
+# Si un événement a plusieurs natures, la catégorie la plus précise l'emporte
 HISTOIRE_PRIORITE_CATEGORIES = ["PANNE", "BUG", "FUITE DE DONNÉES", "CYBERATTAQUE"]
 
 # Corrections manuelles (titre de la page Wikipédia EN, ou FR si elle n'existe qu'en français)
@@ -142,17 +188,29 @@ HISTOIRE_FORCER_GRAND = [
     "Colonial Pipeline ransomware attack",
 ]
 HISTOIRE_FORCER_MOYEN: list[str] = []
-HISTOIRE_EXCLURE = ["Year 2038 problem"]  # pas un événement daté
+HISTOIRE_EXCLURE = [
+    "Year 2038 problem",                   # pas un événement daté
+    "2026 Internet blackout in Iran",      # coupures décidées par un gouvernement :
+    "2024 Bangladesh internet blackouts",  # pas de cause technique
+]
 HISTOIRE_CATEGORIE_FORCEE = {
     "2020 United States federal government data breach": "CYBERATTAQUE",  # attaque de la chaîne logicielle
+    "Colonial Pipeline ransomware attack": "CYBERATTAQUE",
+    "2017 Ukraine ransomware attacks": "CYBERATTAQUE",                    # NotPetya
+    "WannaCry ransomware attack": "CYBERATTAQUE",
 }
+
+# Catalogue des candidats (gardé dans Git : le magazine marche même si les sources sont injoignables)
+FICHIER_CANDIDATS = DOSSIER_BIBLIOTHEQUES / "histoire" / "candidats.json"
+CANDIDATS_MAJ_JOURS = 7   # reconstruit au plus une fois par semaine
 
 # MITRE ATT&CK : données officielles STIX (environ 55 Mo, relues au plus une fois par semaine)
 ATTACK_URL = "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json"
 FICHIER_CACHE_ATTACK = DOSSIER_DATA / "attack_enterprise.json"
 ATTACK_CACHE_JOURS = 7
 
-# Anciennes failles CISA KEV : CVE d'au moins 2 ans, graves (CVSS >= 9 ou rançongiciel)
+# Anciennes failles CISA KEV : CVE d'au moins 2 ans utilisées par des rançongiciels,
+# classées par gravité (CVSS >= 9 d'abord) ; la NVD donne le score et la date de publication
 KEV_AGE_MIN_ANS = 2
 KEV_SCORE_MIN = 9.0
 KEV_MAX_CANDIDATS = 100

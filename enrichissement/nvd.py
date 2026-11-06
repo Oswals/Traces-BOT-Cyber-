@@ -106,6 +106,7 @@ def _extraire_fiche(donnees: dict) -> FicheNVD:
         cwes=cwes,
         produits=produits,
         description=description,
+        publiee=donnees.get("published", "")[:10],
     )
 
 

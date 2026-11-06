@@ -2,16 +2,16 @@
 Anciennes failles du catalogue CISA KEV, candidates « événement moyen » (catégorie CYBERATTAQUE :
 elles ont été exploitées dans la réalité).
 
-On ne garde que des CVE d'au moins KEV_AGE_MIN_ANS ans. Le filtre de gravité (CVSS >= 9
-ou usage connu par un rançongiciel) et la date exacte de publication viennent de la NVD,
-à l'étape suivante (7b) : ici, on regarde seulement l'année inscrite dans le numéro de CVE.
+On ne garde ici que des CVE d'au moins KEV_AGE_MIN_ANS ans, d'après l'année inscrite dans
+leur numéro. Le score CVSS et la date exacte de publication viennent ensuite de la NVD
+(voir histoire/catalogue.py).
 """
 
 import re
 from datetime import date
 
 import config
-from collecteurs.cisa_kev import charger_catalogue
+from collecteurs.cisa_kev import LIEN_CATALOGUE, charger_catalogue
 
 MOTIF_ANNEE = re.compile(r"^CVE-(\d{4})-\d+$")
 
