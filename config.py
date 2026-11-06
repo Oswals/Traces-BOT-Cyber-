@@ -20,6 +20,8 @@ FICHIER_DEJA_VUS = DOSSIER_DATA / "deja_vus.json"
 
 load_dotenv(RACINE / ".env")  # ne fait rien si .env n'existe pas
 NVD_API_KEY = os.getenv("NVD_API_KEY", "").strip()
+# Contact exigé par Wikimedia dans le User-Agent des robots d'API (voir .env.example)
+TRACES_CONTACT = os.getenv("TRACES_CONTACT", "").strip()
 
 # --- Politesse envers les sites -----------------------------------------------
 
@@ -89,3 +91,68 @@ LIEN_CYBERMALVEILLANCE = "https://www.cybermalveillance.gouv.fr/"
 MOTS_CLES_ARNAQUE = ["arnaque", "escroc", "escroquerie", "hameçonnage", "hameconnage", "phishing",
                      "smishing", "vishing", "faux conseiller", "fausse conseillère", "faux support",
                      "faux site", "faux SMS", "sextorsion", "fraude au président", "usurpation", "scam"]
+
+# --- Rubrique « L'histoire » ---------------------------------------------------------
+# Événements de 2005 à aujourd'hui, 4 catégories, toujours avec une cause technique.
+
+HISTOIRE_ANNEE_MIN = 2005
+HISTOIRE_CATEGORIES = ["CYBERATTAQUE", "PANNE", "BUG", "FUITE DE DONNÉES"]
+
+# Wikimedia (Wikipédia, Wikidata, statistiques de vues) : on suit les règles officielles
+# des robots d'API : User-Agent avec contact, requêtes une par une, pause, paramètre maxlag.
+WIKIMEDIA_DELAI = 1.0
+FICHIER_CACHE_VUES = DOSSIER_DATA / "cache_vues.json"
+VUES_CACHE_JOURS = 30   # le nombre de vues sur 12 mois bouge lentement
+
+# Seuils « grand événement » (calibrés le 2026-11-05 sur 25 événements connus) :
+# grand si présent dans >= 20 langues OU >= 100 000 vues sur 12 mois (Wikipédia EN).
+HISTOIRE_SEUIL_LANGUES = 20
+HISTOIRE_SEUIL_VUES = 100_000
+HISTOIRE_VUES_MIN = 3_000   # en dessous, la page est trop confidentielle : pas candidate
+
+# Pages et catégories Wikipédia où chercher des événements, avec la catégorie TRACES
+# qu'elles donnent. SOUMISES À VALIDATION : python -m histoire.explorer les teste.
+#   type "liste"     : on prend les articles liés depuis la page
+#   type "categorie" : on prend les articles de la catégorie (profondeur = sous-catégories)
+HISTOIRE_SOURCES_WIKIPEDIA = [
+    {"wiki": "en", "titre": "List of security hacking incidents", "type": "liste", "categorie": "CYBERATTAQUE"},
+    {"wiki": "en", "titre": "List of cyberattacks", "type": "liste", "categorie": "CYBERATTAQUE"},
+    {"wiki": "en", "titre": "Category:Cyberattacks", "type": "categorie", "profondeur": 1, "categorie": "CYBERATTAQUE"},
+    {"wiki": "en", "titre": "Category:Ransomware", "type": "categorie", "profondeur": 1, "categorie": "CYBERATTAQUE"},
+    {"wiki": "en", "titre": "List of data breaches", "type": "liste", "categorie": "FUITE DE DONNÉES"},
+    {"wiki": "en", "titre": "Category:Data breaches", "type": "categorie", "profondeur": 1, "categorie": "FUITE DE DONNÉES"},
+    {"wiki": "en", "titre": "List of software bugs", "type": "liste", "categorie": "BUG"},
+    {"wiki": "en", "titre": "Category:Software bugs", "type": "categorie", "profondeur": 1, "categorie": "BUG"},
+    {"wiki": "en", "titre": "Category:Computer security exploits", "type": "categorie", "profondeur": 1, "categorie": "BUG"},
+    {"wiki": "en", "titre": "Category:Internet outages", "type": "categorie", "profondeur": 1, "categorie": "PANNE"},
+    {"wiki": "en", "titre": "Category:Computer outages", "type": "categorie", "profondeur": 1, "categorie": "PANNE"},
+    {"wiki": "fr", "titre": "Catégorie:Cyberattaque", "type": "categorie", "profondeur": 1, "categorie": "CYBERATTAQUE"},
+    {"wiki": "fr", "titre": "Catégorie:Fuite de données", "type": "categorie", "profondeur": 1, "categorie": "FUITE DE DONNÉES"},
+    {"wiki": "fr", "titre": "Catégorie:Panne informatique", "type": "categorie", "profondeur": 1, "categorie": "PANNE"},
+    {"wiki": "fr", "titre": "Catégorie:Bug informatique", "type": "categorie", "profondeur": 1, "categorie": "BUG"},
+]
+# Un événement trouvé dans plusieurs sources prend la catégorie la plus rare (la plus précise)
+HISTOIRE_PRIORITE_CATEGORIES = ["PANNE", "BUG", "FUITE DE DONNÉES", "CYBERATTAQUE"]
+
+# Corrections manuelles (titre de la page Wikipédia EN, ou FR si elle n'existe qu'en français)
+HISTOIRE_FORCER_GRAND = [
+    "2017 Ukraine ransomware attacks",                    # NotPetya
+    "2020 United States federal government data breach",  # SolarWinds
+    "2017 Equifax data breach",
+    "Colonial Pipeline ransomware attack",
+]
+HISTOIRE_FORCER_MOYEN: list[str] = []
+HISTOIRE_EXCLURE = ["Year 2038 problem"]  # pas un événement daté
+HISTOIRE_CATEGORIE_FORCEE = {
+    "2020 United States federal government data breach": "CYBERATTAQUE",  # attaque de la chaîne logicielle
+}
+
+# MITRE ATT&CK : données officielles STIX (environ 55 Mo, relues au plus une fois par semaine)
+ATTACK_URL = "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json"
+FICHIER_CACHE_ATTACK = DOSSIER_DATA / "attack_enterprise.json"
+ATTACK_CACHE_JOURS = 7
+
+# Anciennes failles CISA KEV : CVE d'au moins 2 ans, graves (CVSS >= 9 ou rançongiciel)
+KEV_AGE_MIN_ANS = 2
+KEV_SCORE_MIN = 9.0
+KEV_MAX_CANDIDATS = 100
