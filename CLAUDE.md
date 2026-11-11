@@ -48,6 +48,8 @@ traces/
 │   ├── choix.py             # événement du jour + mémoire publies.json
 │   ├── extraits.py          # texte Wikipédia rangé dans les 6 rubriques (fiches découverte)
 │   ├── mise_en_forme.py     # données pour le gabarit (complet / découverte / technique)
+│   ├── doutes.py            # points de doute affichés en bas de page
+│   ├── video.py             # vérification du lien vidéo d'un épisode
 │   └── brouillon_ia.py      # vide : brouillons d'épisodes par l'IA locale (étape 9)
 ├── redaction/               # rédacteurs interchangeables
 │   ├── base.py              # interface commune
@@ -70,6 +72,7 @@ traces/
 │   ├── deja_vus.json        # mémoire des articles déjà traités
 │   ├── arnaque_manuelle.json  # alerte Arnaques saisie à la main (facultatif)
 │   └── cache_*.json, numero.json
+├── outils/                  # scripts de contrôle (dépassement A4, rendus de test)
 ├── sortie/                  # numéros générés (HTML + PDF)
 └── tests/
 ```
@@ -83,7 +86,7 @@ Format commun d'un article : `titre`, `lien`, `source`, `type_source` (officiel 
 3. L'IA locale résumera **uniquement à partir du texte fourni**. Si une information manque, elle écrit « non précisé par la source ». Sa réponse est en JSON et validée : une CVE qu'elle cite doit exister dans l'article d'origine. Si la validation échoue ou si le modèle ne répond pas, le bloc revient à sa version sans IA.
 4. Chaque contenu publié garde le lien vers sa source.
 5. On respecte les sites : délai entre les requêtes, User-Agent explicite, et la NVD avec une clé d'API gratuite. Wikimedia exige un contact dans le User-Agent : `TRACES_CONTACT` dans `.env` (adresse dédiée, jamais l'e-mail personnel par défaut) ; sans lui, aucune requête n'est envoyée.
-6. Les épisodes Histoire et les fiches Arnaques ne sont **jamais générés à la volée** : ils sont rédigés à l'avance, vérifiés, sources à l'appui. Seul un épisode marqué `"verifie": true` est publié comme épisode complet ; une fiche découverte ne contient que des extraits raccourcis de sa source, rien d'inventé.
+6. Les épisodes Histoire et les fiches Arnaques ne sont **jamais générés à la volée** : ils sont rédigés à l'avance, sources à l'appui. **Circuit de publication (décidé le 2026-11-11)** : un épisode est publié tel qu'il a été rédigé ou récupéré, sans attendre de relecture humaine, à condition d'afficher en bas de page ses **points de doute** (liste `a_verifier` de l'auteur, ou doutes calculés depuis les données) et, s'il en a une, une vidéo explicative dont le lien a été vérifié. La mention « Épisode vérifié » n'apparaît qu'avec `"verifie": true`, sinon « Épisode non relu · N points de doute ». Une fiche découverte ne contient que des extraits raccourcis de sa source, rien d'inventé.
 7. Le texte des sources est échappé avant d'être inséré dans le HTML (pas d'injection de code dans le magazine).
 
 ## Rédaction : sans IA d'abord, IA locale ensuite
@@ -122,12 +125,16 @@ Autres contenus sans IA :
   - Dédoublonnage par CVE et par titre normalisé, Wikipédia prioritaire.
   - **Type de date** (`type_date`) : « attaque » (date des faits : Wikidata P585/P580, début d'une campagne ATT&CK) ou « revelation » (date de mise au jour : Wikidata P575/P577, publication d'une CVE CISA, dates manuelles d'Equifax et de SolarWinds). Affiché « Survenu le … » ou « Révélé le … » dans les étiquettes de tête de page.
 - **Rythme** : grand événement le lundi et le jeudi (`config.HISTOIRE_JOURS_GRANDS`), moyen les autres jours ; jamais la même catégorie que la veille ; un anniversaire du jour passe en priorité (« Il y a N ans, jour pour jour »).
-- **Choix** : grand → épisode complet validé jamais publié, sinon fiche découverte ; moyen → fiche technique jamais publiée ; tout publié → le plus anciennement publié revient. Départage : la catégorie la moins récemment publiée, puis la notoriété (grand) ou un tirage reproductible fondé sur la date (moyen).
+- **Choix** : grand → épisode rédigé jamais publié (validés d'abord), sinon fiche découverte ; moyen → fiche technique jamais publiée ; tout publié → le plus anciennement publié revient. Départage : la catégorie la moins récemment publiée, puis la notoriété (grand) ou un tirage reproductible fondé sur la date (moyen).
 - **Mémoire** (`bibliotheques/publies.json`) : id, titre normalisé, date, catégorie, envergure, type (complet / découverte / technique). Un doublon est repéré par l'id ET par le titre normalisé. L'entrée n'est écrite qu'après la génération du numéro.
 - **Présentation** :
   - épisode complet : double page, 6 rubriques, chronologie, schéma, lexique, sources ;
   - fiche découverte : extraits de Wikipédia rangés par intertitre, rubriques vides masquées, mention « Fiche découverte — version complète à venir », SOURCE (CC BY-SA 4.0) et repères CALCULÉ ; double page s'il y a au moins 4 rubriques et assez de texte, sinon une page ;
-  - fiche technique : une page avec le résumé de la source, les CVE et leur profil CVSS, les techniques ATT&CK avec leur lien ; le numéro a alors une page de moins.
+  - fiche technique : une page avec le résumé de la source, les CVE et leur profil CVSS, les techniques ATT&CK avec leur lien ; le numéro a alors une page de moins ;
+  - **bas de page « Points de doute »** sur les trois présentations (`histoire/doutes.py`, 6 lignes au plus, 12 px) : liste `a_verifier` pour un épisode (marque BIBLIOTHÈQUE), doutes déduits des données pour une découverte ou une fiche technique (marque CALCULÉ : rubriques absentes, date imprécise ou de révélation, texte en anglais, une seule page source, valeurs forcées dans `config.py`) ;
+  - **budget d'un épisode rédigé** (`BUDGET_EPISODE`, vérifié par un test sur chaque fichier) : chapeau ≤ 300 caractères, 6 rubriques ≤ 480 chacune, chronologie ≤ 6, schéma ≤ 5, lexique ≤ 4, sources ≤ 6 (titre ≤ 70), `a_verifier` ≤ 4 points ≤ 84 caractères ; la CVE d'un épisode s'affiche sans le profil en 8 cases ;
+  - **vidéo explicative** : champ facultatif `video` {titre, auteur, lien} d'un épisode, saisi à la main depuis une source sérieuse, vérifié avant affichage (`histoire/video.py` : oEmbed pour YouTube, HEAD ailleurs). Pas de recherche automatique.
+- **Outils de contrôle** (`outils/`) : `deborde.ps1` (dépassement A4 par page), `hauteurs.ps1` (hauteur des blocs), `rendus_histoire.py` (un numéro par type de page Histoire + pires cas, dans `sortie/controle/`).
 - **Commandes** : `python -m histoire.catalogue [--forcer]` (catalogue + rapport) ; `python main.py --planning 7` (aperçu des 7 prochains jours, n'écrit rien).
 
 Ce que l'IA locale ajoutera plus tard : un récit pour « Ce qui s'est passé », la traduction et le résumé de la presse anglophone, un édito rédigé, une comparaison de la vie courante dans « C'est quoi ? ».

@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 FICHIER_CACHE = config.DOSSIER_DATA / "cache_extraits.json"
 CACHE_JOURS = 30
-LONGUEUR_CHAPEAU = 360
+LONGUEUR_CHAPEAU = 300
 
 RUBRIQUES = [  # (clé, titre affiché, débuts de mots reconnus dans l'intertitre normalisé)
     ("contexte", "Contexte", ["background", "context", "contexte", "histor", "origin", "presentation"]),

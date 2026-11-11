@@ -5,9 +5,11 @@ import unittest
 from datetime import date
 
 import config
-from histoire import brouillon_ia, extraits
+from unittest.mock import patch
+
+from histoire import brouillon_ia, doutes, extraits, video
 from histoire.choix import charger_episodes
-from histoire.mise_en_forme import date_affichee, page_episode, phrase_date, preparer
+from histoire.mise_en_forme import date_affichee, depassements_budget, page_episode, phrase_date, preparer
 from mise_en_page import generer_html
 from mise_en_page.exemple import NUMERO
 
@@ -95,15 +97,56 @@ class TestEpisodes(unittest.TestCase):
         self.assertEqual(len(episode["sections"]), 6)
         self.assertTrue(all(s["lien"].startswith("https://") for s in episode["sources"]))
         self.assertIn(episode["id"], {e["id"] for e in charger_episodes()})
-        self.assertTrue(page_episode(episode, avec_cves=False)["double"])
+        page = page_episode(episode, hors_ligne=True)
+        self.assertTrue(page["double"])
+        self.assertEqual(page["doutes"], [])          # validé : plus aucun doute affiché
+        self.assertEqual(page["video"]["auteur"][:13], "Computerphile")
 
-    def test_un_brouillon_n_est_jamais_publie_comme_complet(self):
+    def test_episode_non_relu_publie_avec_ses_doutes(self):
         import tempfile
         from pathlib import Path
-        from unittest.mock import patch
         with tempfile.TemporaryDirectory() as dossier, patch.object(config, "DOSSIER_EPISODES", Path(dossier)):
-            (Path(dossier) / "brouillon.json").write_text('{"id": "wd-1", "verifie": false}', encoding="utf-8")
-            self.assertEqual(charger_episodes(), [])
+            (Path(dossier) / "x.json").write_text('{"id": "wd-1", "verifie": false}', encoding="utf-8")
+            self.assertEqual([e["id"] for e in charger_episodes()], ["wd-1"])   # publié quand même...
+            self.assertEqual(charger_episodes(valides_seulement=True), [])    # ... mais pas « vérifié »
+        episode = {"verifie": False, "a_verifier": ["Chiffre Europol à confirmer.", "x" * 400]}
+        d = doutes.doutes_episode(episode)
+        self.assertEqual(d[0], "Chiffre Europol à confirmer.")
+        self.assertLessEqual(len(d[1]), doutes.LONGUEUR_MAX + 6)   # raccourci, avec « […] »
+
+    def test_doutes_calcules_pour_une_decouverte(self):
+        c = {"titre": "X", "titre_en": "X", "titre_fr": None, "langue": "en", "precision_date": "mois",
+             "type_date": "revelation"}
+        sections = [{"cle": "contexte"}, {"cle": "touches"}]
+        d = doutes.doutes_decouverte(c, sections, texte_disponible=True)
+        texte = " ".join(d)
+        self.assertIn("Absent de la source : Déroulement, Cause technique, Conséquences, Enseignements.", d)
+        self.assertEqual(len(d), doutes.NB_MAX)   # 7 doutes possibles, 4 gardés
+        self.assertTrue(all(len(x) <= doutes.LONGUEUR_MAX + 6 for x in d))
+        self.assertIn("mois près", texte)
+        self.assertIn("révélation", texte)
+        self.assertIn("anglais", texte)
+        self.assertNotIn("Une seule page", texte)   # 5e doute : au-delà des 4 lignes affichées
+
+    def test_video_morte_non_affichee(self):
+        class Reponse:
+            ok, status_code = False, 404
+        with patch.object(video.requests, "get", return_value=Reponse()):
+            self.assertIsNone(video.verifier_video({"titre": "T", "lien": "https://www.youtube.com/watch?v=x"}))
+        self.assertIsNone(video.verifier_video({"titre": "T", "lien": "javascript:alert(1)"}))
+        self.assertIsNone(video.verifier_video(None))
+
+    def test_tous_les_episodes_respectent_le_budget(self):
+        # Sinon la double page déborde du format A4 (mesuré avec outils/deborde.ps1)
+        for fichier in sorted(config.DOSSIER_EPISODES.glob("*.json")):
+            episode = json.loads(fichier.read_text(encoding="utf-8"))
+            self.assertEqual(depassements_budget(episode), [], fichier.name)
+
+    def test_budget_detecte_les_depassements(self):
+        episode = {"chapeau": "x" * 301, "sections": [{"titre": "A", "texte": "y" * 481}],
+                   "sources": [{"titre": "z" * 71}] * 7, "a_verifier": ["d" * 85]}
+        problemes = depassements_budget(episode)
+        self.assertEqual(len(problemes), 11)   # chapeau, rubrique, 7 titres, sources, doute
 
     def test_brouillon_ia_ne_fait_rien(self):
         self.assertIsNone(brouillon_ia.rediger_brouillon({"id": "x"}, "texte"))

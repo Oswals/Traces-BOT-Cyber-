@@ -184,7 +184,7 @@ NUMERO = {
         "type": "complet", "titre": _EPISODE["titre"], "annee": _EPISODE["date"][:4],
         "date": "Survenu le 12 mai 2017", "categorie": _EPISODE["categorie"], "envergure": "Grand événement",
         "anniversaire": "", "lien_source": "",
-        **page_episode(_EPISODE, avec_cves=False),
+        **page_episode(_EPISODE, hors_ligne=True),
     },
 
     # --- Lexique de la une (termes présents dans le numéro) ----------------------

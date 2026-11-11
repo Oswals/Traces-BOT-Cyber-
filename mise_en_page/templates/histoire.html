@@ -7,7 +7,6 @@
   <span class="tag-categorie">{{ h.categorie }}</span>
   <span class="tag-envergure">{{ h.envergure }}</span>
   {% if h.anniversaire %}<span class="tag-anniversaire">{{ h.anniversaire }}</span>{% endif %}
-  <span class="histoire-date">{{ h.date }}</span>
 </div>
 {%- endmacro %}
 
@@ -19,14 +18,14 @@
 </div>
 {%- endmacro %}
 
-{# Une CVE : score, type et profil en 8 cases #}
-{% macro bloc_cve(c) -%}
+{# Une CVE : score, type et profil en 8 cases (compact = sans le profil, pour les épisodes) #}
+{% macro bloc_cve(c, compact=False) -%}
 <div class="cve-histoire">
   <div class="point-tete">
     <span><a class="mono" href="{{ c.lien|lien }}">{{ c.cve }}</a> · {{ c.type }}</span>
     <span class="pastille niv-{{ c.niveau }}">{{ c.score|virgule }} · {{ libelle_niveau(c.niveau) }}</span>
   </div>
-  {% if c.profil %}
+  {% if c.profil and not compact %}
   <div class="profil profil-compact">
     {% for case in c.profil %}
     <div class="case niv-{{ case.niveau }}"><div class="case-critere">{{ case.critere }}</div><div class="case-valeur">{{ case.valeur }}</div></div>
@@ -44,6 +43,20 @@
     {% for libelle, valeur in h.reperes %}<dt>{{ libelle }}</dt><dd>{{ valeur }}</dd>{% endfor %}
   </dl>
 </div>
+{%- endmacro %}
+
+{# Bas de page : points de doute (jamais cachés) et vidéo explicative vérifiée #}
+{% macro bloc_doutes(h) -%}
+{% if h.doutes or h.video %}
+<aside class="doutes">
+  {% if h.doutes %}
+  <div class="point-tete"><span class="etiquette">Points de doute ({{ h.doutes|length }})</span>
+    {{ prov("bibliotheque", "Relecture en attente") if h.type == "complet" else prov("calcule", "Relecture automatique") }}</div>
+  <ul>{% for d in h.doutes %}<li>{{ d }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if h.video %}<p class="video"><span class="etiquette">En vidéo</span> <a href="{{ h.video.lien|lien }}">{{ h.video.titre }}</a>{% if h.video.auteur %} · {{ h.video.auteur }}{% endif %}</p>{% endif %}
+</aside>
+{% endif %}
 {%- endmacro %}
 
 {% macro liste_sources(h) -%}
@@ -76,7 +89,7 @@
   <div class="page-contenu">
     {{ etiquettes(h) }}
     <div class="histoire-titre">
-      <div class="histoire-annee">{{ h.annee }}</div>
+      <div class="histoire-annee">{{ h.annee }} <span class="histoire-date">{{ h.date }}</span></div>
       <h1{% if h.resume.langue != "fr" %} lang="{{ h.resume.langue }}"{% endif %}>{{ h.titre }}</h1>
     </div>
 
@@ -102,6 +115,7 @@
         {% if h.attribution %}<p class="mono discret" style="margin-top: 10px">{{ h.attribution }}</p>{% endif %}
       </aside>
     </div>
+    {{ bloc_doutes(h) }}
   </div>
   {{ folio(numero, 7) }}
 </section>
@@ -117,11 +131,11 @@
     {{ etiquettes(h) }}
     <div class="histoire-titre">
       <div class="point-tete">
-        <div class="histoire-annee">{{ h.annee }}</div>
+        <div class="histoire-annee">{{ h.annee }} <span class="histoire-date">{{ h.date }}</span></div>
         {% if decouverte %}
         <span>{% if h.langue != "fr" %}<span class="langue">{{ h.langue|upper }}</span> {% endif %}{{ prov("source", "Wikipédia (CC BY-SA 4.0)", h.lien_source) }}</span>
         {% else %}
-        {{ prov("bibliotheque", "Épisode vérifié" if h.verifie else "Épisode en relecture") }}
+        {{ prov("bibliotheque", "Épisode vérifié" if h.verifie else "Épisode non relu") }}
         {% endif %}
       </div>
       <h1>{{ h.titre }}</h1>
@@ -145,6 +159,7 @@
         {% if not h.double %}{{ liste_sources(h) }}{% endif %}
       </aside>
     </div>
+    {% if not h.double %}{{ bloc_doutes(h) }}{% endif %}
   </div>
   {{ folio(numero, 7) }}
 </section>
@@ -166,13 +181,14 @@
     <div class="grille" style="margin-top: 20px">
       <div class="col-4">
         {% for s in h.sections[coupe:] %}{{ rubrique(s, decouverte) }}{% endfor %}
-        {% for c in h.cves %}{{ bloc_cve(c) }}{% endfor %}
+        {% for c in h.cves %}{{ bloc_cve(c, compact=not decouverte) }}{% endfor %}
       </div>
       <div class="col-2">
         {{ lexique(h.lexique) }}
         {{ liste_sources(h) }}
       </div>
     </div>
+    {{ bloc_doutes(h) }}
   </div>
   {{ folio(numero, 8) }}
 </section>

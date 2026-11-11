@@ -5,7 +5,8 @@ Règles, dans l'ordre :
 1. Envergure : « grand » les jours de HISTOIRE_JOURS_GRANDS (lundi, jeudi), « moyen » sinon.
 2. Jamais la même catégorie que la veille.
 3. Priorité à un anniversaire du jour (« Il y a N ans, jour pour jour »).
-4. Grand : un épisode complet validé ("verifie": true) jamais publié, sinon une fiche découverte.
+4. Grand : un épisode rédigé jamais publié (les validés d'abord), sinon une fiche découverte.
+   Un épisode non relu est publié avec ses points de doute affichés (circuit du 2026-11-11).
    Moyen : un candidat moyen jamais publié (fiche technique).
 5. Si tout a été publié : on reprend celui dont la dernière publication est la plus ancienne.
 
@@ -43,10 +44,11 @@ def enregistrer_publies(publies: list[dict]) -> None:
     config.FICHIER_PUBLIES.write_text(json.dumps(publies, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
-def charger_episodes(valides_seulement: bool = True) -> list[dict]:
-    """Épisodes complets de la bibliothèque. Par défaut, SEULEMENT ceux marqués "verifie": true.
+def charger_episodes(valides_seulement: bool = False) -> list[dict]:
+    """Épisodes rédigés de bibliotheques/histoire/episodes/ (validés ou non).
 
-    Un brouillon (relu par personne) n'est donc jamais publié comme épisode complet.
+    Un épisode non relu est publié avec ses points de doute ; seul le dossier episodes/ est lu,
+    jamais brouillons/ (où l'IA locale déposera plus tard ses propositions).
     """
     episodes = []
     for fichier in sorted(config.DOSSIER_EPISODES.glob("*.json")):
@@ -95,7 +97,8 @@ def _meilleur(candidats: list[dict], jour: date, publies: list[dict]) -> dict:
 
     def cle(c):
         if c["envergure"] == "grand":
-            second = (-(c.get("langues") or 0), -(c.get("vues") or 0), c["id"])
+            # Un épisode validé passe avant un épisode non relu, puis la notoriété
+            second = (c.get("verifie") is not True, -(c.get("langues") or 0), -(c.get("vues") or 0), c["id"])
         else:
             second = (_tirage(jour, c),)
         return (derniere_categorie.get(c["categorie"], ""), *second)

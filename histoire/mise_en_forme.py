@@ -2,7 +2,7 @@
 Transforme le choix du jour (histoire/choix.py) en données pour le gabarit histoire.html.
 
 Trois présentations :
-- « complet »    : épisode rédigé et validé, double page, avec chronologie et schéma ;
+- « complet »    : épisode rédigé (validé ou non), double page, avec chronologie et schéma ;
 - « découverte » : grand événement sans épisode, seulement ce que dit Wikipédia
                    (rubriques vides masquées), double page s'il y a assez de texte, sinon une page ;
 - « technique »  : événement moyen, une page : résumé de la source, CVE avec profil CVSS,
@@ -18,12 +18,13 @@ from redaction import cvss
 from redaction.outils import lien_nvd, niveau
 from redaction.sans_ia import glossaire
 
-from . import extraits
+from . import doutes, extraits
+from .video import verifier_video
 
 log = logging.getLogger(__name__)
 
-LONGUEUR_SECTION_DOUBLE = 480   # caractères par rubrique sur une double page
-LONGUEUR_SECTION_SIMPLE = 380   # ... sur une seule page
+LONGUEUR_SECTION_DOUBLE = 430   # caractères par rubrique sur une double page
+LONGUEUR_SECTION_SIMPLE = 270   # ... sur une seule page
 LONGUEUR_RESUME_TECHNIQUE = 700
 TEXTE_MIN_DOUBLE = 1500         # en dessous, la fiche découverte tient sur une page
 NB_TECHNIQUES = 12              # techniques ATT&CK affichées (les autres : lien vers la campagne)
@@ -32,11 +33,42 @@ ATTRIBUTION_ATTACK = "© The MITRE Corporation. Reproduit avec l'autorisation de
 
 ENVERGURES = {"grand": "Grand événement", "moyen": "Événement moyen"}
 
+# Budget de texte d'un épisode rédigé, pour que la double page tienne en A4 avec ses doutes
+# (vérifié par les tests sur chaque fichier de bibliotheques/histoire/episodes/)
+BUDGET_EPISODE = {"chapeau": 300, "section": 480, "nb_sections": 6, "chronologie": 6, "schema": 5,
+                  "lexique": 4, "sources": 6, "titre_source": 70, "doute": 84, "nb_doutes": 4}
+
+
+def depassements_budget(episode: dict) -> list[str]:
+    """Liste ce qui dépasse le budget (vide si tout va bien)."""
+    b, pb = BUDGET_EPISODE, []
+    if len(episode.get("chapeau", "")) > b["chapeau"]:
+        pb.append(f"chapeau : {len(episode['chapeau'])} > {b['chapeau']} caractères")
+    sections = episode.get("sections", [])
+    if len(sections) > b["nb_sections"]:
+        pb.append(f"{len(sections)} rubriques > {b['nb_sections']}")
+    for s in sections:
+        if len(s.get("texte", "")) > b["section"]:
+            pb.append(f"rubrique « {s.get('titre')} » : {len(s['texte'])} > {b['section']} caractères")
+    for cle in ("chronologie", "schema", "lexique", "sources"):
+        if len(episode.get(cle, [])) > b[cle]:
+            pb.append(f"{cle} : {len(episode[cle])} entrées > {b[cle]}")
+    for src in episode.get("sources", []):
+        if len(src.get("titre", "")) > b["titre_source"]:
+            pb.append(f"titre de source trop long ({len(src['titre'])} > {b['titre_source']}) : {src['titre'][:40]}…")
+    doutes_auteur = episode.get("a_verifier", [])
+    if len(doutes_auteur) > b["nb_doutes"]:
+        pb.append(f"a_verifier : {len(doutes_auteur)} points > {b['nb_doutes']} (seuls les premiers seront affichés)")
+    for d in doutes_auteur:
+        if len(d) > b["doute"]:
+            pb.append(f"point de doute trop long ({len(d)} > {b['doute']}) : {d[:40]}…")
+    return pb
+
 # Toutes les clés lues par le gabarit, avec leur valeur quand un type de fiche ne les remplit pas
 DEFAUTS = {"double": False, "verifie": False, "langue": "fr", "texte_indisponible": False,
            "chapeau": {"texte": "", "langue": "fr"}, "sections": [], "chronologie": [], "schema": [],
            "lexique": [], "reperes": [], "sources": [], "cves": [], "techniques": [],
-           "techniques_reste": 0, "attribution": "", "licence": ""}
+           "techniques_reste": 0, "attribution": "", "licence": "", "doutes": [], "video": None}
 
 
 def phrase_date(c: dict) -> str:
@@ -79,18 +111,22 @@ def preparer(choix: dict | None, jour: date) -> dict | None:
 
 # --- Épisode complet ------------------------------------------------------------------
 
-def page_episode(episode: dict, avec_cves: bool = True) -> dict:
-    """avec_cves=False : sans appel à la NVD (numéro de démonstration, hors ligne)."""
+def page_episode(episode: dict, hors_ligne: bool = False) -> dict:
+    """hors_ligne=True : ni NVD ni vérification du lien vidéo (numéro de démonstration)."""
+    for probleme in depassements_budget(episode):
+        log.warning("Épisode %s hors budget, la page risque de déborder : %s", episode.get("id"), probleme)
     return {**DEFAUTS,
         "double": True,
         "verifie": episode.get("verifie") is True,
+        "doutes": doutes.doutes_episode(episode),
+        "video": episode.get("video") if hors_ligne else verifier_video(episode.get("video")),
         "chapeau": {"texte": episode["chapeau"], "langue": "fr"},
         "sections": [{**s, "langue": "fr"} for s in episode["sections"] if s.get("texte")],
         "chronologie": episode.get("chronologie", []),
         "schema": episode.get("schema", []),
         "lexique": episode.get("lexique", []),
         "sources": episode.get("sources", []),
-        "cves": _cves(episode.get("cves", [])) if avec_cves else [],
+        "cves": [] if hors_ligne else _cves(episode.get("cves", [])),
     }
 
 
@@ -124,6 +160,7 @@ def _decouverte(c: dict) -> dict:
         "langue": langue,
         "texte_indisponible": not texte,
         "cves": _cves(c.get("cves", [])),
+        "doutes": doutes.doutes_decouverte(c, sections, bool(texte)),
     }
 
 
@@ -146,6 +183,7 @@ def _technique(c: dict) -> dict:
         "attribution": ATTRIBUTION_ATTACK if source == "MITRE ATT&CK" else "",
         "reperes": [("Catégorie", c["categorie"].capitalize()), ("Source", source)],
         "sources": [{"titre": f"{source} · {c['titre']}", "lien": c.get("lien", "")}],
+        "doutes": doutes.doutes_technique(c),
     }
 
 

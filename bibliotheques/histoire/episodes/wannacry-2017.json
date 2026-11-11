@@ -20,7 +20,7 @@
     {"cle": "touches", "titre": "Qui a été touché",
      "texte": "Plus de 200 000 victimes, surtout des entreprises, dans au moins 150 pays, selon Europol. En Angleterre, 81 des 236 trusts du service public de santé (NHS) sont perturbés, dont 34 infectés : rendez-vous et opérations annulés, urgences réorganisées. Renault arrête la production de plusieurs usines : Sandouville et Douai en France, et des sites en Slovénie et en Roumanie ; Telefónica, Deutsche Bahn et FedEx sont aussi atteints."},
     {"cle": "consequences", "titre": "Conséquences",
-     "texte": "La rançon demandée était de 300 dollars, doublée au bout de trois jours, et le message menaçait d'effacer les fichiers au bout de sept jours ; peu de victimes ont payé, et payer ne garantissait pas de récupérer les fichiers. Le coût pour le NHS a été estimé à 92 millions de livres (estimation d'octobre 2018). Le 19 décembre 2017, les États-Unis, le Royaume-Uni, l'Australie, le Canada et le Japon attribuent officiellement l'attaque à la Corée du Nord. Microsoft critique publiquement la conservation de failles secrètes par les services de renseignement."},
+     "texte": "Rançon : 300 dollars, doublée après trois jours, avec menace d'effacer les fichiers après sept jours ; peu de victimes ont payé, sans garantie de récupérer leurs fichiers. Coût pour le NHS : 92 millions de livres (estimation d'oct. 2018). Le 19 décembre 2017, les États-Unis, le Royaume-Uni, l'Australie, le Canada et le Japon attribuent officiellement l'attaque à la Corée du Nord. Microsoft critique le stockage de failles secrètes par les services de renseignement."},
     {"cle": "enseignements", "titre": "Enseignements",
      "texte": "Installer vite les correctifs des failles exploitables à distance ; ne jamais exposer le partage de fichiers SMB sur Internet et désactiver SMBv1 ; cloisonner le réseau pour qu'un ver ne puisse pas tout atteindre ; garder des sauvegardes déconnectées ; remplacer les systèmes qui ne sont plus maintenus. WannaCry reste l'exemple type d'une catastrophe évitable : le correctif existait."}
   ],
@@ -45,14 +45,15 @@
     {"terme": "SMB", "definition": "Protocole de Windows pour partager fichiers et imprimantes sur un réseau."},
     {"terme": "Correctif", "definition": "Mise à jour qui supprime une faille."}
   ],
+  "video": {"titre": "Wana Decrypt0r (Wanacry Ransomware)", "auteur": "Computerphile (université de Nottingham)", "lien": "https://www.youtube.com/watch?v=88jkB1V6N9w"},
   "cves": ["CVE-2017-0144"],
   "techniques": [],
   "sources": [
     {"titre": "Microsoft, bulletin de sécurité MS17-010 (mars 2017)", "lien": "https://learn.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010"},
     {"titre": "NVD, fiche CVE-2017-0144", "lien": "https://nvd.nist.gov/vuln/detail/CVE-2017-0144"},
-    {"titre": "CERT-FR, alerte CERTFR-2017-ALE-010 : propagation d'un rançongiciel exploitant les vulnérabilités MS17-010", "lien": "https://cert.cyber.gouv.fr/alerte/CERTFR-2017-ALE-010/"},
-    {"titre": "National Audit Office, Investigation: WannaCry cyber attack and the NHS (octobre 2017)", "lien": "https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/"},
-    {"titre": "Microsoft (Brad Smith), The need for urgent collective action to keep people safe online (mai 2017)", "lien": "https://blogs.microsoft.com/on-the-issues/2017/05/14/need-urgent-collective-action-keep-people-safe-online-lessons-last-weeks-cyberattack/"},
+    {"titre": "CERT-FR, alerte CERTFR-2017-ALE-010 (rançongiciel exploitant MS17-010)", "lien": "https://cert.cyber.gouv.fr/alerte/CERTFR-2017-ALE-010/"},
+    {"titre": "National Audit Office, WannaCry cyber attack and the NHS (oct. 2017)", "lien": "https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/"},
+    {"titre": "Microsoft (Brad Smith), billet du 14 mai 2017 : leçons de l'attaque", "lien": "https://blogs.microsoft.com/on-the-issues/2017/05/14/need-urgent-collective-action-keep-people-safe-online-lessons-last-weeks-cyberattack/"},
     {"titre": "Wikipédia (EN), WannaCry ransomware attack", "lien": "https://en.wikipedia.org/wiki/WannaCry_ransomware_attack"}
   ]
 }
