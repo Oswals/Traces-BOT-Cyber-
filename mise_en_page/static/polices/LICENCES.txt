@@ -1,0 +1,3 @@
+Archivo (Omnibus-Type), Source Serif 4 (Adobe), IBM Plex Mono (IBM) : SIL Open Font License 1.1.
+https://openfontlicense.org/ - Les polices peuvent être utilisées, incorporées et redistribuées librement ;
+elles ne peuvent pas être vendues seules.

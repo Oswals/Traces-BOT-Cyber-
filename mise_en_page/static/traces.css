@@ -22,6 +22,7 @@
   --niv-critique: #111418;
 
   /* Polices */
+  /* Les polices sont incorporées dans chaque numéro (static/polices) : pas de dépendance réseau */
   --police-titre: "Archivo", "Arial Narrow", sans-serif;
   --police-texte: "Source Serif 4", Georgia, serif;
   --police-code: "IBM Plex Mono", Consolas, monospace;
@@ -69,7 +70,7 @@ p { margin: 0 0 8px; }
   background: var(--signal);
 }
 
-.page-contenu { flex: 1; min-height: 0; }
+.page-contenu { flex: 1; min-height: 0; overflow: hidden; }  /* un débordement est coupé, jamais superposé au folio */
 
 /* En-tête « TRACES · N°xx · date » et rubrique */
 .entete {

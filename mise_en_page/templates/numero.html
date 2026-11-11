@@ -4,10 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TRACES N°{{ "%02d"|format(numero.numero) }} · {{ numero.date }}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-  {# Notre propre feuille de style : |safe dit à Jinja de ne pas l'échapper (elle ne vient pas d'une source) #}
+  {# Polices incorporées (aucun chargement réseau : même rendu partout), puis notre feuille de style.
+     |safe dit à Jinja de ne pas les échapper : elles viennent du projet, pas d'une source. #}
+  <style>{{ polices|safe }}</style>
   <style>{{ css|safe }}</style>
 </head>
 <body>

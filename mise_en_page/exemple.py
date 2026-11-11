@@ -194,3 +194,18 @@ NUMERO = {
         {"terme": "Exécution de code à distance", "definition": "L'attaquant fait exécuter ses propres instructions par la machine visée, sans y avoir accès physiquement."},
     ],
 }
+
+
+# Les textes fictifs ci-dessus sont coupés aux mêmes longueurs que dans un vrai numéro
+# (assemblage.py) : la démo doit tenir en A4 exactement comme la production.
+def _appliquer_limites() -> None:
+    from mise_en_page.assemblage import LONGUEUR_POINT_FAILLE, LONGUEUR_POINT_UNE
+    from redaction.outils import couper
+    for fiche in NUMERO["failles"]:
+        for point in fiche["points"]:
+            point["texte"] = couper(point["texte"], LONGUEUR_POINT_FAILLE)
+    for point in NUMERO["une"]["comprendre"]:
+        point["texte"] = couper(point["texte"], LONGUEUR_POINT_UNE)
+
+
+_appliquer_limites()

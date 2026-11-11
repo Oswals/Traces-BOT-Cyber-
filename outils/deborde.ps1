@@ -1,4 +1,4 @@
-param([string]$Fichier)
+﻿param([string]$Fichier)
 # Mesure, pour chaque page A4 d'un numéro, de combien de pixels le contenu dépasse (0 = tient).
 # Ouvre le fichier dans Edge sans fenêtre, attend les polices, puis lit scrollHeight - clientHeight.
 # Usage : .\outils\deborde.ps1 -Fichier .\sortie\traces_demo.html

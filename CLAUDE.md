@@ -67,7 +67,7 @@ traces/
 │   └── publies.json         # événements Histoire déjà publiés (gardé dans Git)
 ├── mise_en_page/
 │   ├── templates/           # gabarits Jinja2 des pages TRACES
-│   └── static/              # CSS, polices
+│   └── static/              # CSS, polices (woff2 locales + polices.css)
 ├── data/                    # créé au lancement, jamais commité
 │   ├── deja_vus.json        # mémoire des articles déjà traités
 │   ├── arnaque_manuelle.json  # alerte Arnaques saisie à la main (facultatif)
@@ -148,7 +148,7 @@ Concept : le dossier d'enquête. Tons de rapport de renseignement et de revue sc
 
 - **Couleurs** : Encre `#111418` · Papier `#F6F6F3` · Signal `#2E47E6` (identité) · Brume `#E8ECFD` (encadrés « Comprendre ») · Alerte `#E8590C` (danger uniquement) · Graphite `#4B5058` · Filet `#CFD2D6`
 - **Niveau de menace (CVSS)** : Faible `#D9DCE1` (0,1–3,9) · Moyenne `#F6B98A` (4–6,9) · Haute `#E8590C` (7–8,9) · Critique `#111418` (9–10)
-- **Polices** (Google Fonts) : Archivo Condensed (titres, chiffres ; Expanded pour le titre TRACES) · Source Serif 4 (texte) · IBM Plex Mono (codes, CVE, dates, sources)
+- **Polices** (fichiers woff2 dans `mise_en_page/static/polices`, licence OFL, incorporés en base64 dans chaque numéro : même rendu en ligne, hors ligne et en PDF ; aucun appel à Google Fonts) : Archivo Condensed (titres, chiffres ; Expanded pour le titre TRACES) · Source Serif 4 (texte) · IBM Plex Mono (codes, CVE, dates, sources)
 - **Éléments récurrents** : filet signal de 10 px en tête de page, en-tête « TRACES · N°xx · date » et rubrique, codes [01] Une / [02] Failles / [03] Radar / [04] Arnaques / [05] Histoire, encadré COMPRENDRE, notes LEXIQUE, marques de provenance, folio en pied de page
 - **Marques de provenance** : SOURCE (filet encre) · CALCULÉ (filet et texte signal) · BIBLIOTHÈQUE (fond encre, texte papier) · IA LOCALE (filet signal en pointillés)
 - **Règles** : A4 794×1123 px, marges 64 px, grille de 6 colonnes, gouttière 24 px, aucun texte sous 12 px, aucune illustration décorative
