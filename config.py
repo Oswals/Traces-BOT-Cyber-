@@ -245,3 +245,14 @@ KEV_MAX_CANDIDATS = 100
 HISTOIRE_JOURS_GRANDS = [0, 3]   # lundi et jeudi ; les autres jours : événement moyen
 DOSSIER_EPISODES = DOSSIER_BIBLIOTHEQUES / "histoire" / "episodes"   # épisodes complets rédigés
 FICHIER_PUBLIES = DOSSIER_BIBLIOTHEQUES / "publies.json"             # mémoire (gardée dans Git)
+
+# --- Export PDF (étape 8) ---------------------------------------------------------
+# Le PDF est imprimé par le navigateur déjà installé, sans fenêtre : premier chemin existant.
+NAVIGATEURS_PDF = [
+    r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+    r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+    r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+]
+PDF_ATTENTE_MS = 8000   # temps laissé au chargement des polices web avant d'imprimer
+PDF_TIMEOUT = 90        # secondes avant d'abandonner l'export

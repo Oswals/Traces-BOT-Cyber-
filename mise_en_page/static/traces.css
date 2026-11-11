@@ -455,9 +455,14 @@ h3 { font-size: 18px; margin-bottom: 6px; }
    Impression / PDF (étape 8)
    ========================================================================== */
 
+/* À l'écran, la page fait 794 x 1123 px (= A4 à 96 ppp, arrondi au pixel). À l'impression, on la
+   redonne EXACTEMENT en millimètres : sinon l'arrondi (210,08 mm > 210 mm) fait déborder chaque
+   page sur une feuille suivante. overflow: hidden coupe le demi-pixel restant, rien de visible. */
 @page { size: A4; margin: 0; }
 @media print {
-  body { background: none; }
-  .page { margin: 0; box-shadow: none; break-after: page; }
+  html, body { width: 210mm; margin: 0; background: none; }
+  .page { width: 210mm; height: 297mm; margin: 0; box-shadow: none; break-after: page; overflow: hidden; }
+  .page:last-of-type { break-after: auto; }   /* pas de feuille blanche à la fin */
+  .page.deborde { outline: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

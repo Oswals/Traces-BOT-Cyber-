@@ -6,5 +6,13 @@
   "categorie": "CYBERATTAQUE",
   "envergure": "moyen",
   "type": "technique"
+ },
+ {
+  "id": "wd-Q121306104",
+  "titre_normalise": "downfall security vulnerability",
+  "date": "2026-11-11",
+  "categorie": "BUG",
+  "envergure": "moyen",
+  "type": "technique"
  }
 ]

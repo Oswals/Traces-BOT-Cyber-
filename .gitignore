@@ -13,6 +13,7 @@ data/
 sortie/
 deja_vus.json
 *.log
+sortie/controle/
 
 # --- Éditeur et système ---
 .vscode/

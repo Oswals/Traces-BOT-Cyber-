@@ -9,6 +9,10 @@ Utilisation :
     python main.py --demo     -> numéro de démonstration (données fictives, sans Internet)
     python main.py --debug    -> messages détaillés pour déboguer
     python main.py --planning 7 -> rubrique Histoire des 7 prochains jours (n'écrit rien)
+    python main.py --sans-pdf -> seulement le HTML (plus rapide)
+
+Chaque matin, le Planificateur de tâches Windows lance outils/lancer_traces.ps1, qui exécute
+ce fichier et écrit data/journal.log (installation : outils/installer_tache.ps1).
 """
 
 import argparse
@@ -21,6 +25,7 @@ import config
 from collecteurs import collecter_tout
 from enrichissement import enrichir
 from mise_en_page import assembler, generer_html, numero_du_jour
+from mise_en_page.pdf import exporter_pdf
 from selection import selectionner
 
 JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
@@ -100,6 +105,7 @@ def main() -> None:
     parser.add_argument("--details", action="store_true", help="affiche le résumé de la collecte")
     parser.add_argument("--debug", action="store_true", help="logs détaillés")
     parser.add_argument("--planning", type=int, metavar="N", help="rubrique Histoire des N prochains jours")
+    parser.add_argument("--sans-pdf", action="store_true", help="ne produit que le HTML")
     args = parser.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")  # accents corrects dans la console Windows
 
@@ -114,6 +120,8 @@ def main() -> None:
         from mise_en_page.exemple import NUMERO
         chemin = generer_html(NUMERO, config.DOSSIER_SORTIE / "traces_demo.html")
         print(f"Numéro de démonstration généré : {chemin}")
+        if not args.sans_pdf:
+            print(f"PDF : {exporter_pdf(chemin) or 'non produit (voir les erreurs ci-dessus)'}")
         return
 
     articles = collecter_tout()
@@ -140,7 +148,10 @@ def main() -> None:
                        histoire=preparer(histoire, aujourd_hui))
     chemin = generer_html(numero, config.DOSSIER_SORTIE / f"traces_{aujourd_hui.isoformat()}.html")
     choix_histoire.memoriser(aujourd_hui, histoire)
+    pdf = None if args.sans_pdf else exporter_pdf(chemin)
     print(f"\nTRACES N°{numero['numero']:02d} généré : {chemin}")
+    if not args.sans_pdf:
+        print(f"PDF : {pdf or 'non produit (voir les erreurs ci-dessus)'}")
     print(f"À la une : {numero['une']['titre']}")
     if histoire:
         print(f"L'histoire : {histoire['candidat']['titre']} ({histoire['type']})")

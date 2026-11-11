@@ -71,8 +71,9 @@ traces/
 ├── data/                    # créé au lancement, jamais commité
 │   ├── deja_vus.json        # mémoire des articles déjà traités
 │   ├── arnaque_manuelle.json  # alerte Arnaques saisie à la main (facultatif)
+│   ├── journal.log          # trace des lancements automatiques
 │   └── cache_*.json, numero.json
-├── outils/                  # scripts de contrôle (dépassement A4, rendus de test)
+├── outils/                  # contrôle (dépassement A4, rendus de test) et lancement quotidien
 ├── sortie/                  # numéros générés (HTML + PDF)
 └── tests/
 ```
@@ -173,7 +174,7 @@ Chaque étape se termine par quelque chose que je peux lancer et vérifier.
 5. Branchement des vraies données sur les gabarits
 6. Rédaction sans IA : interface commune, traduction des vecteurs CVSS, extraction des sections officielles du CERT-FR, glossaire CWE, marques de provenance
 7. Bibliothèques : la rubrique Histoire (7a sources, 7b catalogue, 7c choix et mémoire, 7d pages et premier épisode : WannaCry, 2017, en relecture), une dizaine d'épisodes vérifiés, le lexique, et la relecture des fiches Arnaques (8 fiches rédigées, `"verifie": false` tant qu'elles ne sont pas relues) et du glossaire CWE
-8. Export PDF et lancement automatique chaque matin (Planificateur de tâches Windows)
+8. Export PDF et lancement automatique chaque matin (Planificateur de tâches Windows) — fait : `mise_en_page/pdf.py` imprime le HTML en PDF A4 avec Edge ou Chrome sans fenêtre (aucune dépendance), `outils/lancer_traces.ps1` + `outils/installer_tache.ps1` créent la tâche « TRACES » (journal dans `data/journal.log`)
 9. *(Plus tard, optionnel)* Rédacteur IA locale avec Ollama, selon la puissance du PC, avec retour automatique au mode sans IA en cas d'échec
 
 Ensuite, la **V4** : tests, et comparaison avec une veille faite en tâche planifiée Cowork.
