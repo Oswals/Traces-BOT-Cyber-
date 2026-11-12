@@ -14,5 +14,13 @@
   "categorie": "BUG",
   "envergure": "moyen",
   "type": "technique"
+ },
+ {
+  "id": "wd-Q29957041",
+  "titre_normalise": "wannacry ransomware attack",
+  "date": "2026-11-12",
+  "categorie": "CYBERATTAQUE",
+  "envergure": "grand",
+  "type": "complet"
  }
 ]

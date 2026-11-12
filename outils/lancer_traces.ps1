@@ -1,6 +1,6 @@
 ﻿# Lance le numéro du jour si les conditions sont réunies, et garde une trace dans data\journal.log.
-# Le Planificateur de tâches appelle ce script souvent (toutes les 15 min à partir de 07:00, et à
-# l'ouverture de session) : il décide lui-même s'il y a quelque chose à faire.
+# Le Planificateur de tâches appelle ce script souvent (toutes les 15 min, ouverture et déverrouillage
+# de session, réveil de veille, connexion réseau) : il décide lui-même s'il y a quelque chose à faire.
 #   - il est au moins 07:00 ;
 #   - le numéro du jour n'existe pas encore (sortie\traces_AAAA-MM-JJ.html) ;
 #   - Internet répond (le CERT-FR est joignable) ;
@@ -31,6 +31,12 @@ if (-not $Forcer) {
     if (-not $connecte) { exit 0 }
 }
 
+# Verrou : un seul lancement à la fois (la tâche peut être réveillée par plusieurs événements
+# rapprochés, ou pendant un lancement manuel). Un verrou de plus de 30 min est considéré comme oublié.
+$verrou = Join-Path $donnees "en_cours.lock"
+if ((Test-Path $verrou) -and ((Get-Date) - (Get-Item $verrou).LastWriteTime).TotalMinutes -lt 30) { exit 0 }
+Set-Content $verrou $PID
+
 $debut = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 Add-Content $journal "=== $debut : lancement" -Encoding utf8
 & "$projet\.venv\Scripts\python.exe" main.py 2>&1 | ForEach-Object { "$_" } | Add-Content $journal -Encoding utf8
@@ -42,6 +48,7 @@ if ($code -ne 0) {
     Set-Content $tentatives ($essais + 1)
     if ($essais + 1 -ge $ESSAIS_MAX) { Add-Content $journal "=== $ESSAIS_MAX échecs aujourd'hui : on réessaiera demain" -Encoding utf8 }
 }
+Remove-Item $verrou -Force -ErrorAction SilentlyContinue
 # Ménage : les compteurs des jours précédents
 Get-ChildItem (Join-Path $donnees "tentatives_*.txt") | Where-Object { $_.Name -ne "tentatives_$jour.txt" } | Remove-Item -Force
 exit $code

@@ -54,9 +54,10 @@ powershell -ExecutionPolicy Bypass -File .\outils\installer_tache.ps1      # cr�
 powershell -ExecutionPolicy Bypass -File .\outils\installer_tache.ps1 -Supprimer
 ```
 
-La tâche réveille `outils\lancer_traces.ps1` toutes les 15 minutes à partir de 07:00 et à
-l'ouverture de session ; le script génère le numéro dès que c'est possible (pas encore fait
-aujourd'hui, Internet disponible), une seule fois par jour. Journal : `data\journal.log`.
+La tâche réveille `outils\lancer_traces.ps1` à 07:00 puis toutes les 15 minutes, à l'ouverture et
+au déverrouillage de session, au réveil de veille et à chaque connexion réseau ; le script génère le
+numéro dès que c'est possible (après 07:00, pas encore fait aujourd'hui, Internet disponible), une
+seule fois par jour, sans fenêtre. Journal : `data\journal.log`.
 Pour forcer une génération : `.\outils\lancer_traces.ps1 -Forcer`.
 
 ## Organisation du code
